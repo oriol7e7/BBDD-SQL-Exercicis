@@ -1,6 +1,6 @@
 # CONSTRAINTS SQL I TIPUS DE DADES
 
-#TIPUS DE DADES
+# TIPUS DE DADES
 
 ## Dades de caràcters (Text)
 
@@ -43,7 +43,7 @@
 
 
 
-#CONSTRAINTS
+# CONSTRAINTS
 ## Restriccions de clau:
   
 ### PRIMARY KEY:
