@@ -1,6 +1,49 @@
-# CONSTRAINTS SQL
-  
-  
+# CONSTRAINTS SQL I TIPUS DE DADES
+
+#TIPUS DE DADES
+
+## Dades de caràcters (Text)
+
+-   **VARCHAR($n$):** Cadena de caràcters de longitud variable amb un màxim de $n$ caràcters.
+    
+-   **CHAR($n$):** Cadena de caràcters de longitud fixa de $n$ caràcters. S'omple amb espais si el valor és més curt.
+    
+-   **TEXT:** Cadena de caràcters de longitud variable per a grans quantitats de text.
+    
+
+## Dades numèriques
+
+-   **INT / INTEGER:** Nombre enter.
+    
+-   **SMALLINT:** Nombre enter petit.
+    
+-   **BIGINT:** Nombre enter gran.
+    
+-   **NUMERIC($p, s$) / DECIMAL($p, s$):** Nombre amb precisió i escala. $p$ és el nombre total de dígits, $s$ és el nombre de dígits després del punt decimal.
+    
+-   **FLOAT / REAL:** Nombre en coma flotant (aproximat).
+    
+-   **DOUBLE PRECISION:** Nombre en coma flotant de doble precisió (aproximat).
+    
+
+## Dades de data i hora
+
+-   **DATE:** Emmagatzema només la data (any, mes, dia).
+    
+-   **TIME:** Emmagatzema només l'hora (hora, minut, segon).
+    
+-   **TIMESTAMP:** Emmagatzema la data i l'hora.
+    
+-   **INTERVAL:** Emmagatzema un període de temps.
+    
+
+## Dades booleanes
+
+-   **BOOLEAN:** Pot emmagatzemar $\text{TRUE}$, $\text{FALSE}$ o $\text{NULL}$.
+
+
+
+#CONSTRAINTS
 ## Restriccions de clau:
   
 ### PRIMARY KEY:
