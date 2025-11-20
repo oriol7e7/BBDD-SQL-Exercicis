@@ -1,8 +1,38 @@
 # CONSTRAINTS SQL I TIPUS DE DADES
 
-# TIPUS DE DADES
+## METACOMANDES BÀSIQUES POSTGRES
 
-## Dades de caràcters (Text)
+````` sql
+\l
+`````
+Llistar Base de Dades al gestor (nivell servidor)
+
+````` sql
+\d
+`````
+Llistar taules de la base de dades a la que estàs connectat (pots afegir una taula per veure els camps)
+
+### Crear base de dades amb usuari
+
+````` sql
+--Crear base de dades institut
+CREATE DATABASE institut;
+
+--Crear usuari institut i permisos
+CREATE USER institut WITH SUPERUSER CREATEROLE ENCRYPTED PASSWORD 'institut';
+ALTER DATABASE institut OWNER TO institut;
+GRANT ALL PRIVILEGES ON DATABASE institut TO institut;
+
+--Sortir del client
+\q
+
+--Connectarse a la base de dades institut amb el seu usuari
+psql -U institut -W -d institut
+`````
+
+## TIPUS DE DADES
+
+### Dades de caràcters (Text)
 
 -   **VARCHAR($n$):** Cadena de caràcters de longitud variable amb un màxim de $n$ caràcters.
     
@@ -11,7 +41,7 @@
 -   **TEXT:** Cadena de caràcters de longitud variable per a grans quantitats de text.
     
 
-## Dades numèriques
+### Dades numèriques
 
 -   **INT / INTEGER:** Nombre enter.
     
@@ -26,7 +56,7 @@
 -   **DOUBLE PRECISION:** Nombre en coma flotant de doble precisió (aproximat).
     
 
-## Dades de data i hora
+### Dades de data i hora
 
 -   **DATE:** Emmagatzema només la data (any, mes, dia).
     
@@ -43,10 +73,10 @@
 
 
 
-# CONSTRAINTS
-## Restriccions de clau:
+## CONSTRAINTS
+### Restriccions de clau:
   
-### PRIMARY KEY:
+#### PRIMARY KEY:
 ````` sql
 CONSTRAINT [PK_TAULA] PRIMARY KEY ([DNI])
 `````
@@ -58,7 +88,7 @@ CONSTRAINT [PK_TAULA] PRIMARY KEY ([DNI])
 
   
 
-### FOREIGN KEY:
+#### FOREIGN KEY:
 ````` sql
 CONSTRAINT [FK_TAULA_TAULAREF] FOREIGN KEY ([DNI]) REFERENCES [CLIENT(DNI)]
 `````
@@ -72,13 +102,13 @@ CONSTRAINT [FK_TAULA_TAULAREF] FOREIGN KEY ([DNI]) REFERENCES [CLIENT(DNI)]
 
   
 
-## Restriccions Check:
+### Restriccions Check:
 
 Per comprovar si el valor a introduir compleix unes regles definides
 
   
 
-### Comparació i rang (<, >, <=, >=, =, BETWEEN):
+#### Comparació i rang (<, >, <=, >=, =, BETWEEN):
 
 Comparar un valor per veure si està en un rang o si és major o menor que (valors numèrics)
 `````sql
@@ -86,7 +116,7 @@ CONSTRAINT CK_TAULA CHECK (preu>0)
 `````
   
 
-### Conjunt de valors (IN, NOT IN):
+#### Conjunt de valors (IN, NOT IN):
 
 El valor ha de ser un determinat en una llista especifica
 `````sql
@@ -94,7 +124,7 @@ CONSTRAINT CK_TAULA CHECK (color IN (‘Vermell’, ‘Verd’, ‘Blau’’))
 `````
   
 
-### Manipulació de Strings (UPPER, LOWER, o LENGTH):
+#### Manipulació de Strings (UPPER, LOWER, o LENGTH):
 
 El valor ha de ser en majúscules, minúscules o d’una llargària determinada
 `````sql
@@ -103,7 +133,7 @@ CONSTRAINT CK_TAULA CHECK (nom = UPPER(nom))
   
   
 
-### Operacions matemàtiques (+, -, *, /):
+#### Operacions matemàtiques (+, -, *, /):
 
 Assegurar lògica matemàtica entre valors de diferents columnes
 ````` sql
@@ -111,7 +141,7 @@ CONSTRAINT CK_TAULA CHECK (marge > (cost * 0.10))
 `````
   
 
-### Operadors Lògics (AND, OR, NOT):
+#### Operadors Lògics (AND, OR, NOT):
 
 Combinar condicions en una regla
 `````sql
@@ -119,7 +149,7 @@ CONSTRAINT CK_TAULA CHECK ((metode = 'aeri' AND pes< 5) OR (metode = 'maritim'))
 `````
   
 
-### Format i patró (~):
+#### Format i patró (~):
 
 Validar formats complexes segons regles
 `````sql
@@ -130,7 +160,7 @@ CONSTRAINT CK_TAULA CHECK (DNI ~ '^[0-9]{8}[A-Z]$')
   
   
 
-## Restricció UNIQUE:
+### Restricció UNIQUE:
 
 Garanteix que el valor no és repeteix en el camp (no pot aparèixer el mateix DNI dos vegades)
 `````sql
@@ -139,7 +169,7 @@ CONSTRAINT [UQ_DNI] UNIQUE [email]
   
   
 
-## Restricció NOT NULL:
+### Restricció NOT NULL:
 
 Garanteix que el valor no pot ser null, i per tant sempre ha de haver un valor. (Sense Constraint)
 
@@ -149,7 +179,7 @@ campExemple NUMERIC(100) NOT NULL
   
   
 
-## Restricció DEFAULT:
+### Restricció DEFAULT:
 
 Especifica el valor per defecte que té aquell camp
 `````sql
