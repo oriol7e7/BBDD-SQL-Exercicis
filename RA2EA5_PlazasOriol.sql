@@ -52,5 +52,18 @@ ALTER TABLE FITXA RENAME CONSTRAINT PK_FITXA TO PrimKey_Fitxa;
 --Modificar longitud tipus de dada
 ALTER TABLE FITXA ALTER COLUMN Codi_Postal TYPE VARCHAR(10);
 
-ALTER TABLE FITXA ALTER COLUMN Codi_Postal TYPE NUMERIC(5);
+--Using per canviar el tipus de dades
+ALTER TABLE FITXA ALTER COLUMN Codi_Postal TYPE NUMERIC(5) USING Codi_Postal::NUMERIC;
 
+ALTER TABLE FITXA ADD CONSTRAINT CK_Upper_Prov CHECK (provincia = UPPER(provincia));
+
+ALTER TABLE FITXA DROP CONSTRAINT CK_Upper_Prov;
+
+--canviar nom taula
+ALTER TABLE FITXA RENAME TO ENTRADA;
+
+--esborrar taula
+DROP TABLE ENTRADA;
+
+--veure que s'ha esborrat
+\d ENTRADA
