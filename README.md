@@ -20,6 +20,8 @@ LListar Schemas dins de la base de dades
 Veure Schema on estas situat actualment
 ````` sql
 \ds
+-- o tambe
+SELECT current_schema;
 `````
 ### Crear base de dades amb usuari
 
