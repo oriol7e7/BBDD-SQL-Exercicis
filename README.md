@@ -218,3 +218,17 @@ Moure una taula d'un Schema a un altre
 `````sql
 ALTER TABLE nom-schema.nomTaula SET SCHEMA [schema-desti];
 `````
+
+## ROLES
+Grups que pots assignar als usuaris amb x permisos sobre taules o Schemas
+
+Crear role
+`````sql
+CREATE ROLE [nom-role] INHERIT;
+`````
+
+Assignar permisos a un rol sobre schemas
+`````sql
+GRANT USAGE, CREATE ON SCHEMA [nom-schema], [nom-schema] TO [nom-role];
+`````
+(depen si vol us, creacio o creacio i us)
