@@ -232,3 +232,9 @@ Assignar permisos a un rol sobre schemas
 GRANT USAGE, CREATE ON SCHEMA [nom-schema], [nom-schema] TO [nom-role];
 `````
 (depen si vol us, creacio o creacio i us)
+
+Crear usuaris amb un role
+`````sql
+CREATE ROLE [nomUsuari] LOGIN PASSWORD 'password' INHERIT;
+GRANT [nom-rol] TO [nomUsuari];
+`````
