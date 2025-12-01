@@ -211,3 +211,8 @@ Situar-se a un Schema (al schema que et situis, totes les instruccions que facis
 `````sql
 SET search_path TO [nom-schema];
 `````
+
+Moure una taula d'un Schema a un altre
+`````sql
+ALTER TABLE nom-schema.nomTaula SET SCHEMA [schema-desti];
+`````
