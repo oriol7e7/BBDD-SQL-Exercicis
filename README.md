@@ -56,6 +56,7 @@ psql -U institut -W -d institut
 --Veure usuari connectat
 SELECT current_user;
 `````
+-----
 
 ## TIPUS DE DADES
 
@@ -98,6 +99,7 @@ SELECT current_user;
 
 -   **BOOLEAN:** Pot emmagatzemar $\text{TRUE}$, $\text{FALSE}$ o $\text{NULL}$.
 
+-----
 
 ## DDL - Data Definition Language
 ## Creació taules (CREATE TABLE)
@@ -107,6 +109,7 @@ CREATE TABLE IF NOT EXISTS [nomTaula] (
     [nomCamp] VARCHAR(50),
 );
 `````
+---
 
 ## CONSTRAINTS
 ### Restriccions de clau:
@@ -220,6 +223,7 @@ Especifica el valor per defecte que té aquell camp (Sense Constraint)
 `````sql
 estat VARCHAR(20) DEFAULT ‘ACTIU’
 `````
+---
 
 ## Modificacio de dades (ALTER TABLE)
 Pots modificar, afegir o esborrar camps, restriccions o tipus de dades.
@@ -251,6 +255,7 @@ ALTER TABLE [nomSchema].[nomTaula] RENAME CONSTRAINT [nomConstraint] TO [nouNomC
 ALTER TABLE [nomSchema].[nomTaula] SET SCHEMA [schemaDesti];
 `````
 
+---
 
 ## SCHEMAS:
 
@@ -271,6 +276,7 @@ Moure una taula d'un Schema a un altre
 `````sql
 ALTER TABLE nom-schema.nomTaula SET SCHEMA [schema-desti];
 `````
+---
 
 ## ROLES
 Grups que pots assignar als usuaris amb x permisos sobre taules o Schemas
