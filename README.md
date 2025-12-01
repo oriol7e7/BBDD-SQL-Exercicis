@@ -1,5 +1,18 @@
 # APUNTS POSTGRESQL
 
+## ÍNDEX DE CONTINGUTS
+
+* [1.  MetaComandes Bàsiques de Postgres](#metacomandes-bàsiques-postgres)
+* [2. Tipus de Dades](#tipus-de-dades)
+* [3. SQL DDL (Definició de Dades)](#ddl---data-definition-language)
+    * [Creació taules (CREATE TABLE)](#creació-taules-create-table)
+    * [Constraints (Restriccions)](#constraints)
+    * [Modificació de dades (ALTER TABLE)](#modificacio-de-dades-alter-table)
+    * [Schemas](#schemas)
+    * [Roles i Usuaris (DCL)](#roles)
+* [IV. 🔄 SQL DML (Manipulació de Dades)](#iv--sql-dml-manipulaci-de-dades)
+    * [DELETE (Esborrar Registres)](#delete-esborrar-registres)
+
 ## METACOMANDES BÀSIQUES POSTGRES
 
 Llistar Bases de Dades al gestor (nivell servidor)
@@ -86,6 +99,14 @@ SELECT current_user;
 -   **BOOLEAN:** Pot emmagatzemar $\text{TRUE}$, $\text{FALSE}$ o $\text{NULL}$.
 
 
+## DDL - Data Definition Language
+## Creació taules (CREATE TABLE)
+````` sql
+CREATE TABLE IF NOT EXISTS [nomTaula] (
+    [nomCamp] VARCHAR(9) NOT NULL,
+    [nomCamp] VARCHAR(50),
+);
+`````
 
 ## CONSTRAINTS
 ### Restriccions de clau:
@@ -195,10 +216,42 @@ campExemple NUMERIC(100) NOT NULL
 
 ### Restricció DEFAULT:
 
-Especifica el valor per defecte que té aquell camp
+Especifica el valor per defecte que té aquell camp (Sense Constraint)
 `````sql
-estat VARCHAR(20) DEFAULT ‘ACTIU’CONSTRAINTS SQL
+estat VARCHAR(20) DEFAULT ‘ACTIU’
 `````
+
+## Modificacio de dades (ALTER TABLE)
+Pots modificar, afegir o esborrar camps, restriccions o tipus de dades.
+També pots cambiar noms de taules i moure taules entre schemas
+`````sql
+-- Afegir columna
+ALTER TABLE [nomSchema].[nomTaula] ADD COLUMN [nomColumna] VARCHAR(50);
+
+-- Esborrar columna
+ALTER TABLE [nomSchema].[nomTaula] DROP COLUMN [nomColumna];
+
+-- Modificar tipus de dades
+ALTER TABLE [nomSchema].[nomTaula] ALTER COLUMN [nomColumna] TYPE NUMERIC(8,2);
+
+-- Afegir restricció (constraint)
+ALTER TABLE [nomSchema].[nomTaula] ADD CONSTRAINT CK_Upper_Prov CHECK (provincia = UPPER(provincia));
+
+-- Esborrar restricció
+ALTER TABLE [nomSchema].[nomTaula] DROP CONSTRAINT [nomConstraint];
+
+-- Canviar nom d'una taula o columna
+ALTER TABLE [nomSchema].[nomTaula] RENAME TO [nomNouTaula];
+ALTER TABLE [nomSchema].[nomTaula] RENAME COLUMN [nomColumna] TO [nomNouTaula];
+
+--Canviar nom d'una restricció
+ALTER TABLE [nomSchema].[nomTaula] RENAME CONSTRAINT [nomConstraint] TO [nouNomConstraint];
+
+-- Moure taula d'Schema
+ALTER TABLE [nomSchema].[nomTaula] SET SCHEMA [schemaDesti];
+`````
+
+
 ## SCHEMAS:
 
 Un esquema es un grup de taules que les pot agrupar en tipus. 
