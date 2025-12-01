@@ -2,18 +2,25 @@
 
 ## METACOMANDES BÀSIQUES POSTGRES
 
+Llistar Bases de Dades al gestor (nivell servidor)
 ````` sql
 \l
 `````
-Llistar Base de Dades al gestor (nivell servidor)
 
-
-
+Llistar taules de la base de dades a la que estàs connectat (pots afegir una taula per veure els camps)
 ````` sql
 \d
 `````
-Llistar taules de la base de dades a la que estàs connectat (pots afegir una taula per veure els camps)
 
+LListar Schemas dins de la base de dades
+````` sql
+\dn
+`````
+
+Veure Schema on estas situat actualment
+````` sql
+\ds
+`````
 ### Crear base de dades amb usuari
 
 ````` sql
