@@ -197,4 +197,17 @@ Especifica el valor per defecte que té aquell camp
 `````sql
 estat VARCHAR(20) DEFAULT ‘ACTIU’CONSTRAINTS SQL
 `````
-  
+## SCHEMAS:
+
+Un esquema es un grup de taules que les pot agrupar en tipus. 
+Per exemple una base de dades d'un laboratori pot tindre un Schema d'administració i de clinica.
+
+Crear Schema:
+`````sql
+CREATE SCHEMA [nom-schema];
+`````
+ 
+Situar-se a un Schema (al schema que et situis, totes les instruccions que facis (com CREATE TABLE) es faran dins d'aquell Schema, al fer CREATE TABLE es crearà la taula dins de l'Schema):
+`````sql
+SET search_path TO [nom-schema];
+`````
