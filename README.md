@@ -7,6 +7,8 @@
 `````
 Llistar Base de Dades al gestor (nivell servidor)
 
+
+
 ````` sql
 \d
 `````
@@ -28,6 +30,9 @@ GRANT ALL PRIVILEGES ON DATABASE institut TO institut;
 
 --Connectarse a la base de dades institut amb el seu usuari
 psql -U institut -W -d institut
+
+--Veure usuari connectat
+SELECT current_user;
 `````
 
 ## TIPUS DE DADES
