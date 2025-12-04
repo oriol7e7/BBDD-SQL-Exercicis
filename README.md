@@ -12,7 +12,7 @@
     * [Roles i Usuaris (DCL)](#roles)
 * [4. SQL DML (Manipulació de Dades)](#dml-data-manipulation-language)
     * [INSERT (Afegir registres)](#insert-afegir-registres)
-    * [UPDATE (Modificar Registres)](#udpate-modificar-registres)
+    * [UPDATE (Modificar Registres)](#update-modificar-registres)
     * [DELETE (Esborrar Registres)](#delete-esborrar-registres) 
 
 ## METACOMANDES BÀSIQUES POSTGRES
@@ -303,7 +303,7 @@ GRANT [nom-rol] TO [nomUsuari];
 ## DML Data Manipulation Language
 ### INSERT (afegir registres)
 
-## UPDATE (modificar registres)
+#3# UPDATE (modificar registres)
 
-## DELETE (esborrar registres)
+### DELETE (esborrar registres)
 
