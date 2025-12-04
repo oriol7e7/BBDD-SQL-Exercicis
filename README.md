@@ -10,8 +10,10 @@
     * [Modificació de dades (ALTER TABLE)](#modificacio-de-dades-alter-table)
     * [Schemas](#schemas)
     * [Roles i Usuaris (DCL)](#roles)
-* [IV. 🔄 SQL DML (Manipulació de Dades)](#iv--sql-dml-manipulaci-de-dades)
-    * [DELETE (Esborrar Registres)](#delete-esborrar-registres)
+* [4. SQL DML (Manipulació de Dades)](#dml-data-manipulation-language)
+    * [INSERT (Afegir registres)](#insert-afegir-registres)
+    * [UPDATE (Modificar Registres)](#udpate-modificar-registres)
+    * [DELETE (Esborrar Registres)](#delete-esborrar-registres) 
 
 ## METACOMANDES BÀSIQUES POSTGRES
 
@@ -297,3 +299,11 @@ Crear usuaris amb un role
 CREATE ROLE [nomUsuari] LOGIN PASSWORD 'password' INHERIT;
 GRANT [nom-rol] TO [nomUsuari];
 `````
+
+## DML Data Manipulation Language
+### INSERT (afegir registres)
+
+## UPDATE (modificar registres)
+
+## DELETE (esborrar registres)
+
