@@ -303,7 +303,7 @@ GRANT [nom-rol] TO [nomUsuari];
 ## DML Data Manipulation Language
 ### INSERT (afegir registres)
 
-#3# UPDATE (modificar registres)
+### UPDATE (modificar registres)
 
 ### DELETE (esborrar registres)
 
