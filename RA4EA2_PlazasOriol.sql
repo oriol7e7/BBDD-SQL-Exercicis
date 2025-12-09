@@ -9,7 +9,6 @@ GRANT ALL PRIVILEGES ON DATABASE agenda TO agenda;
 
 --Sortir del client
 \q
-
 --Connectarse a la base de dades agenda amb el seu usuari
 psql -U agenda -W -d agenda
 
@@ -63,7 +62,6 @@ INSERT INTO FITXA VALUES(
     '06/07/1978',
     2
 );
-
 --Eliminar fila amb dni 3421232
 DELETE FROM FITXA WHERE dni = 3421232;
 
@@ -109,7 +107,7 @@ VALUES (
 );
 
 ----
-BEGIN
+BEGIN;
 
 INSERT INTO FITXA VALUES(
     7868544, 
@@ -132,6 +130,8 @@ INSERT INTO FITXA VALUES(
     5
 );
 
+COMMIT; 
+BEGIN;
 ---
 
 INSERT INTO FITXA VALUES(
@@ -144,7 +144,7 @@ INSERT INTO FITXA VALUES(
     '05/05/1970',
     6
 );
-
+COMMIT;
 ---
 
 INSERT INTO FITXA VALUES(
@@ -158,7 +158,7 @@ INSERT INTO FITXA VALUES(
     7
 );
 
-COMMIT intA;
+SANCHO intA;
 
 ---
 
@@ -184,7 +184,7 @@ INSERT INTO FITXA VALUES(
     9
 );
 
-COMMIT intB;
+SAVEPOINT intB;
 
 ---
 
@@ -199,7 +199,7 @@ INSERT INTO FITXA VALUES(
     10
 );
 
-COMMIT intC;
+SAVEPOINT intC;
 
 ---
 
@@ -225,7 +225,7 @@ INSERT INTO FITXA VALUES(
     13
 );
 
-COMMIT intD;
+SAVEPOINT intD;
 
 ---
 
@@ -233,7 +233,7 @@ COMMIT intD;
 
 DELETE FROM FIXTA WHERE dni = 45824852;
 
-COMMIT intE;
+SAVEPOINT intE;
 
 SELECT * FROM FITXA;
 
@@ -241,7 +241,7 @@ SELECT * FROM FITXA;
 -- Modificar registre
 UPDATE FITXA SET EQUIP = 11 WHERE DNI = 48488588;
 
-COMMIT intF;
+SAVEPOINT intF;
 
 ROLLBACK intE;
 SELECT * FROM FITXA;
@@ -253,7 +253,7 @@ SELECT * FROM FITXA;
 UPDATE FITXA SET EQUIP = 11 WHERE DNI = 38624852.;
 SELECT * FROM FITXA;
 
-
+COMMIT;
 --
 INSERT INTO FITXA VALUES(
     98987765, 
