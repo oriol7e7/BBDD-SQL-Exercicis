@@ -1,5 +1,5 @@
 # APUNTS POSTGRESQL
-
+## TO DO: INSERT UPDATE DELETE (DML), SEQUENCE, INDEX (DDL)
 ## ÍNDEX DE CONTINGUTS
 
 * [1.  MetaComandes Bàsiques de Postgres](#metacomandes-bàsiques-postgres)
