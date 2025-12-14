@@ -1,5 +1,5 @@
 # APUNTS POSTGRESQL
-## TO DO: INSERT UPDATE DELETE (DML), SEQUENCE, INDEX (DDL)
+## SEQUENCE, INDEX (DDL) i SELECT (DML)
 ## ÍNDEX DE CONTINGUTS
 
 * [1.  MetaComandes Bàsiques de Postgres](#metacomandes-bàsiques-postgres)
@@ -302,8 +302,46 @@ GRANT [nom-rol] TO [nomUsuari];
 
 ## DML Data Manipulation Language
 ### INSERT (afegir registres)
+Es per insertar dades dins de les taules i els camps (columnes)
+`````sql
+INSERT INTO [nomTaula] ([nomCamp], [nomCamp], [nomCamp]) VALUES ([dadaAfegir], [dadaAfegir], [dadaAfegir])
+-- Pots no afegir els noms dels camps a insertar i s'interpreterà que estàs afegint tots els camps en ordre
+
+-- Insertar múltiples files a la vegada
+INSERT INTO [nomTaula] ([nomCamp], [nomCamp) 
+VALUES 
+    ('[dadaAfegir]', [dadaAfegir]),
+    ('[dadaAfegir]', [dadaAfegir]),
+    ('[dadaAfegir]', [dadaAfegir]);
+`````
 
 ### UPDATE (modificar registres)
+Es per modificar les dades d'una taula o columna
+`````sql
+--Per modificar una dada concreta
+UPDATE [nomTaula]
+SET [nomCamp a modificar] = [nomValor]
+WHERE [nomCamp] = [condicio]; --Aqui tambe podem posar diferents condicions si volem modificar diferents valors a l'hora. Per modificar una fila concreta podem fer la condicio amb la PK (WHERE ID = 5)
+--Sense el WHERE ES MODIFIQUEN TOTS ELS REGISTRES:
+UPDATE [nomTaula]
+SET [nomCamp a modificar] = ['caca']; --A tots els registres de la taula el camp posat tindrà el valor 'caca'
 
+-- Modificar diversos camps en el mateix registre
+UPDATE [nomTaula]
+SET [camp1] = [nouValor1],
+    [camp2] = [nouValor2]
+WHERE [condicio];
+`````
 ### DELETE (esborrar registres)
+Es per esborrar DADES de les taules i columnes
 
+`````sql
+--Per esborrar una fila sencera
+DELETE FROM [nomTaula] WHERE id = 5; --Pots posar condicions com WHERE salari<1000 per esborrar totes les files a les quals el salari es menor que 1000
+`````
+
+### TRUNCATE (esborrar totes les dades de la taula)
+Es per esborrar totes les DADES d'una taula mantenint la estructura intacta
+`````sql
+TRUNCATE TABLE [nomTaula];
+`````
