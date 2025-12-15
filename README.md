@@ -1,5 +1,5 @@
 # APUNTS POSTGRESQL
-## SEQUENCE, INDEX (DDL) i SELECT (DML)
+## TODO: SEQUENCE, INDEX (DDL) i SELECT (DML)
 ## ÍNDEX DE CONTINGUTS
 
 * [1.  MetaComandes Bàsiques de Postgres](#metacomandes-bàsiques-postgres)
