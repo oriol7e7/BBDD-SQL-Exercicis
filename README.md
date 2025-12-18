@@ -1,5 +1,18 @@
 # APUNTS POSTGRESQL
-## TODO: SEQUENCE, INDEX (DDL) i SELECT (DML)
+## TODO: SEQUENCE, INDEX (DDL) i SELECT (DML) || AFEGIR ON DELETE CASCADE O ON UPDATE CASCADE (modificar dades per poder fer insert), transaccions
+````` sql
+UPDATE BICICLETA
+SET idbici = 2233456
+WHERE idbici = 4233456;
+
+--No es pot ja que idbici tambe esta a la taula lloguer com a clau foranea
+
+--Per fer-ho s'ha de posar la dada com a ON UPDATE cascade
+
+--Canvi a la estructura de la taula
+ALTER TABLE LLOGUER DROP CONSTRAINT FK_LLOGUER_BICICLETA ;
+ALTER TABLE LLOGUER ADD CONSTRAINT FK_LLOGUER_BICICLETA FOREIGN KEY (bici) REFERENCES BICICLETA(idbici) ON UPDATE CASCADE;
+`````
 ## ÍNDEX DE CONTINGUTS
 
 * [1.  MetaComandes Bàsiques de Postgres](#metacomandes-bàsiques-postgres)
