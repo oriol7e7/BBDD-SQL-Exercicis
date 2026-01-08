@@ -1,18 +1,5 @@
 # APUNTS POSTGRESQL
-## TODO: SEQUENCE, VISTES(VIEWS)(DML), INDEX (DDL) i SELECT (DML) || AFEGIR ON DELETE CASCADE O ON UPDATE CASCADE (modificar dades per poder fer insert), transaccions
-````` sql
-UPDATE BICICLETA
-SET idbici = 2233456
-WHERE idbici = 4233456;
-
---No es pot ja que idbici tambe esta a la taula lloguer com a clau foranea
-
---Per fer-ho s'ha de posar la dada com a ON UPDATE cascade
-
---Canvi a la estructura de la taula
-ALTER TABLE LLOGUER DROP CONSTRAINT FK_LLOGUER_BICICLETA ;
-ALTER TABLE LLOGUER ADD CONSTRAINT FK_LLOGUER_BICICLETA FOREIGN KEY (bici) REFERENCES BICICLETA(idbici) ON UPDATE CASCADE;
-`````
+## transaccions
 ## ÍNDEX DE CONTINGUTS
 
 * [1.  MetaComandes Bàsiques de Postgres](#metacomandes-bàsiques-postgres)
@@ -21,12 +8,16 @@ ALTER TABLE LLOGUER ADD CONSTRAINT FK_LLOGUER_BICICLETA FOREIGN KEY (bici) REFER
     * [Creació taules (CREATE TABLE)](#creació-taules-create-table)
     * [Constraints (Restriccions)](#constraints)
     * [Modificació de dades (ALTER TABLE)](#modificacio-de-dades-alter-table)
+    * * [ON DELETE CASCADE](#on-delete-cascade)
     * [Schemas](#schemas)
     * [Roles i Usuaris (DCL)](#roles)
+    * [Vistes (VIEWS)](#vistes)
+    * [Index i sequencies](#index-i-sequencies)
 * [4. SQL DML (Manipulació de Dades)](#dml-data-manipulation-language)
     * [INSERT (Afegir registres)](#insert-afegir-registres)
     * [UPDATE (Modificar Registres)](#update-modificar-registres)
-    * [DELETE (Esborrar Registres)](#delete-esborrar-registres) 
+    * [DELETE (Esborrar Registres)](#delete-esborrar-registres)
+* [5. SQL DQL (Consultes)](#dql-data-query-language)
 
 ## METACOMANDES BÀSIQUES POSTGRES
 
@@ -271,6 +262,22 @@ ALTER TABLE [nomSchema].[nomTaula] SET SCHEMA [schemaDesti];
 `````
 
 ---
+## On delete cascade
+Si no es pot actualizar o esborrar (on update, on delete), s'ha d'esborrar la FK i tornar-la a crear amb cascade
+````` sql
+UPDATE BICICLETA
+SET idbici = 2233456
+WHERE idbici = 4233456;
+
+--No es pot ja que idbici tambe esta a la taula lloguer com a clau foranea
+
+--Per fer-ho s'ha de posar la dada com a ON UPDATE cascade
+
+--Canvi a la estructura de la taula
+ALTER TABLE LLOGUER DROP CONSTRAINT FK_LLOGUER_BICICLETA ;
+ALTER TABLE LLOGUER ADD CONSTRAINT FK_LLOGUER_BICICLETA FOREIGN KEY (bici) REFERENCES BICICLETA(idbici) ON UPDATE CASCADE;
+`````
+---
 
 ## SCHEMAS:
 
@@ -311,6 +318,57 @@ Crear usuaris amb un role
 `````sql
 CREATE ROLE [nomUsuari] LOGIN PASSWORD 'password' INHERIT;
 GRANT [nom-rol] TO [nomUsuari];
+`````
+---
+# Index i sequencies
+L'index serveix per crear una llista ordenada de les dades que vulguis i fer consultes més rapides:
+`````sql
+CREATE INDEX [nomIndex]
+ON [nomTaula([nomCamp])];
+
+-- Tambe es pot fer un index UNIQUE
+CREATE UNIQUE INDEX Telefon_index
+ON PERSONA(TELEFON);
+`````
+
+Les sequencies es un generador de numeros que pots customitzar per quin comença, acaba i el seu salt
+`````sql
+CREATE SEQUENCE [nomSequencia]
+INCREMENT 10 --En aquest cas va de 10 en 10
+START WITH 100 -- Comença en 100
+MAXVALUE 999999; --Valor maxim 999999
+
+-- Per utilizarla (NEXTVAL('[nomSequencia]'):
+INSERT INTO ARXIU (ID) VALUES (NEXTVAL('ARXIUID_SEQ'));
+`````
+- També es pot utilizar el tipus de dades serial per a que vagi d'un a un i es posi automatic
+`````sql
+CREATE TABLE users(
+   id SERIAL PRIMARY KEY,
+   nom VARCHAR
+),
+--A l'insert no cal posar l'id ja que es un serial i es posa automaticament
+INSERT INTO users(nom) VALUES('oriol');
+INSERT INTO users(nom) VALUES('joan');
+`````
+** Si falla un update o insert pot ser pq el tipus de dades de la sequencia es diferent del del camp
+
+---
+
+# Vistes
+"Taules" creades a partir d'una consulta, s'actualitza automaticament cada cop que es modifica el contingut de la taula o taules les quals es consulten
+`````sql
+CREATE VIEW [nomVista] AS
+(SELECT NOM, COGNOM1, TELEFON FROM PERSONA); --Consulta de la qual es fa la taula
+
+--Per veure contingut d'una vista es pot fer un select
+SELECT * FROM [nomVista];
+
+--Per crear vista amb camps de diferents taules
+CREATE VIEW DADES_PROF
+AS (SELECT PERSONA.NOM,PERSONA.COGNOM1, PROFESSOR.ESPECIALITAT --Agafa dades de taula persona i professor
+FROM PERSONA, PROFESSOR --Les taules les quals es consulten
+WHERE PERSONA.DNI = PROFESSOR.DNI_PROF); --Condicio consulta
 `````
 
 ## DML Data Manipulation Language
@@ -357,4 +415,21 @@ DELETE FROM [nomTaula] WHERE id = 5; --Pots posar condicions com WHERE salari<10
 Es per esborrar totes les DADES d'una taula mantenint la estructura intacta
 `````sql
 TRUNCATE TABLE [nomTaula];
+`````
+
+
+
+## DQL Data Query Language
+# Select
+Consulta estandard per seleccionar dades d'una o moltes taules
+
+`````sql
+--Es seleccionen els camps que es volen veure a la consulta
+SELECT p.nom AS nom-professor, a.nom AS nom-alumne -- a i p son alies de taules i puc pusar alies per que es vegi millor el nom del camp
+--Dic les taules a les quals he de consultar i puc afegir alies
+FROM professor AS p, alumne AS a --Si utilitzo el as li dono un alies a la taula profesor i alumne
+--Condicio(no obligatoria) per filtrar dades (En aquest cas nomes es mostraran el nom de a i p (alumne i professor) els quals idprof sigui igual a id -> es a dir, busca quin és el profe de cada alumne (alumne.idProfe)i mira quin profe te aquest id a la seva taula i posa el nom)
+WHERE a.idProf = p.id;
+
+--Com a resultat es veuran tots als alumnes i el nom del seu profe
 `````
