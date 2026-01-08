@@ -1,5 +1,5 @@
 # APUNTS POSTGRESQL
-## TODO: SEQUENCE, INDEX (DDL) i SELECT (DML) || AFEGIR ON DELETE CASCADE O ON UPDATE CASCADE (modificar dades per poder fer insert), transaccions
+## TODO: SEQUENCE, VISTES(VIEWS)(DML), INDEX (DDL) i SELECT (DML) || AFEGIR ON DELETE CASCADE O ON UPDATE CASCADE (modificar dades per poder fer insert), transaccions
 ````` sql
 UPDATE BICICLETA
 SET idbici = 2233456
