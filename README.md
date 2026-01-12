@@ -384,6 +384,8 @@ VALUES
     ('[dadaAfegir]', [dadaAfegir]),
     ('[dadaAfegir]', [dadaAfegir]),
     ('[dadaAfegir]', [dadaAfegir]);
+
+--Si es vol que actui el default es posa DEFAULT i si es vol que sigui null (no hi ha default), es posa NULL
 `````
 
 ### UPDATE (modificar registres)
