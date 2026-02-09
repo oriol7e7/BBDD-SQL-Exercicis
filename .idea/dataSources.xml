@@ -15,5 +15,12 @@
       <jdbc-url>jdbc:postgresql://postgresql-oriol.alwaysdata.net:5432/oriol_hr</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="oriol_training@postgresql-oriol.alwaysdata.net [2]" uuid="a364fb2a-e1d2-43ae-bd83-ec713018decf">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://postgresql-oriol.alwaysdata.net:5432/oriol_training</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>
