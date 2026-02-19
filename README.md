@@ -1,5 +1,5 @@
 # APUNTS POSTGRESQL
-## transaccions
+#### TODO: DQL (QUERIES) having, group by, orderby, functions(avg, count, max, min, sum)
 ## ÍNDEX DE CONTINGUTS
 
 * [1.  MetaComandes Bàsiques de Postgres](#metacomandes-bàsiques-postgres)
@@ -422,7 +422,7 @@ TRUNCATE TABLE [nomTaula];
 
 
 ## DQL Data Query Language
-# Select
+### Select
 Consulta estandard per seleccionar dades d'una o moltes taules
 
 `````sql
