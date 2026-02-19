@@ -101,14 +101,14 @@ SELECT current_user;
 -   **INTERVAL:** Emmagatzema un període de temps.
     
 
-## Dades booleanes
+### Dades booleanes
 
 -   **BOOLEAN:** Pot emmagatzemar $\text{TRUE}$, $\text{FALSE}$ o $\text{NULL}$.
 
 -----
 
 ## DDL - Data Definition Language
-## Creació taules (CREATE TABLE)
+### Creació taules (CREATE TABLE)
 ````` sql
 CREATE TABLE IF NOT EXISTS [nomTaula] (
     [nomCamp] VARCHAR(9) NOT NULL,
@@ -117,10 +117,10 @@ CREATE TABLE IF NOT EXISTS [nomTaula] (
 `````
 ---
 
-## CONSTRAINTS
-### Restriccions de clau:
+### CONSTRAINTS
+#### Restriccions de clau:
   
-#### PRIMARY KEY:
+##### PRIMARY KEY:
 ````` sql
 CONSTRAINT [PK_TAULA] PRIMARY KEY ([DNI])
 `````
@@ -132,7 +132,7 @@ CONSTRAINT [PK_TAULA] PRIMARY KEY ([DNI])
 
   
 
-#### FOREIGN KEY:
+##### FOREIGN KEY:
 ````` sql
 CONSTRAINT [FK_TAULA_TAULAREF] FOREIGN KEY ([DNI]) REFERENCES [CLIENT(DNI)]
 `````
@@ -146,13 +146,13 @@ CONSTRAINT [FK_TAULA_TAULAREF] FOREIGN KEY ([DNI]) REFERENCES [CLIENT(DNI)]
 
   
 
-### Restriccions Check:
+#### Restriccions Check:
 
 Per comprovar si el valor a introduir compleix unes regles definides
 
   
 
-#### Comparació i rang (<, >, <=, >=, =, BETWEEN):
+##### Comparació i rang (<, >, <=, >=, =, BETWEEN):
 
 Comparar un valor per veure si està en un rang o si és major o menor que (valors numèrics)
 `````sql
@@ -160,7 +160,7 @@ CONSTRAINT CK_TAULA CHECK (preu>0)
 `````
   
 
-#### Conjunt de valors (IN, NOT IN):
+##### Conjunt de valors (IN, NOT IN):
 
 El valor ha de ser un determinat en una llista especifica
 `````sql
@@ -168,7 +168,7 @@ CONSTRAINT CK_TAULA CHECK (color IN (‘Vermell’, ‘Verd’, ‘Blau’’))
 `````
   
 
-#### Manipulació de Strings (UPPER, LOWER, o LENGTH):
+##### Manipulació de Strings (UPPER, LOWER, o LENGTH):
 
 El valor ha de ser en majúscules, minúscules o d’una llargària determinada
 `````sql
@@ -177,7 +177,7 @@ CONSTRAINT CK_TAULA CHECK (nom = UPPER(nom))
   
   
 
-#### Operacions matemàtiques (+, -, *, /):
+##### Operacions matemàtiques (+, -, *, /):
 
 Assegurar lògica matemàtica entre valors de diferents columnes
 ````` sql
@@ -185,7 +185,7 @@ CONSTRAINT CK_TAULA CHECK (marge > (cost * 0.10))
 `````
   
 
-#### Operadors Lògics (AND, OR, NOT):
+##### Operadors Lògics (AND, OR, NOT):
 
 Combinar condicions en una regla
 `````sql
@@ -193,7 +193,7 @@ CONSTRAINT CK_TAULA CHECK ((metode = 'aeri' AND pes< 5) OR (metode = 'maritim'))
 `````
   
 
-#### Format i patró (~):
+##### Format i patró (~):
 
 Validar formats complexes segons regles
 `````sql
@@ -204,7 +204,7 @@ CONSTRAINT CK_TAULA CHECK (DNI ~ '^[0-9]{8}[A-Z]$')
   
   
 
-### Restricció UNIQUE:
+#### Restricció UNIQUE:
 
 Garanteix que el valor no és repeteix en el camp (no pot aparèixer el mateix DNI dos vegades)
 `````sql
@@ -213,7 +213,7 @@ CONSTRAINT [UQ_DNI] UNIQUE [email]
   
   
 
-### Restricció NOT NULL:
+#### Restricció NOT NULL:
 
 Garanteix que el valor no pot ser null, i per tant sempre ha de haver un valor. (Sense Constraint)
 
@@ -223,7 +223,7 @@ campExemple NUMERIC(100) NOT NULL
   
   
 
-### Restricció DEFAULT:
+#### Restricció DEFAULT:
 
 Especifica el valor per defecte que té aquell camp (Sense Constraint)
 `````sql
@@ -231,7 +231,7 @@ estat VARCHAR(20) DEFAULT ‘ACTIU’
 `````
 ---
 
-## Modificacio de dades (ALTER TABLE)
+### Modificacio de dades (ALTER TABLE)
 Pots modificar, afegir o esborrar camps, restriccions o tipus de dades.
 També pots cambiar noms de taules i moure taules entre schemas
 `````sql
@@ -262,7 +262,7 @@ ALTER TABLE [nomSchema].[nomTaula] SET SCHEMA [schemaDesti];
 `````
 
 ---
-## On delete cascade
+### On delete cascade
 Si no es pot actualizar o esborrar (on update, on delete), s'ha d'esborrar la FK i tornar-la a crear amb cascade
 ````` sql
 UPDATE BICICLETA
@@ -279,7 +279,7 @@ ALTER TABLE LLOGUER ADD CONSTRAINT FK_LLOGUER_BICICLETA FOREIGN KEY (bici) REFER
 `````
 ---
 
-## SCHEMAS:
+### SCHEMAS:
 
 Un esquema es un grup de taules que les pot agrupar en tipus. 
 Per exemple una base de dades d'un laboratori pot tindre un Schema d'administració i de clinica.
@@ -300,7 +300,7 @@ ALTER TABLE nom-schema.nomTaula SET SCHEMA [schema-desti];
 `````
 ---
 
-## ROLES
+### ROLES
 Grups que pots assignar als usuaris amb x permisos sobre taules o Schemas
 
 Crear role
@@ -320,7 +320,7 @@ CREATE ROLE [nomUsuari] LOGIN PASSWORD 'password' INHERIT;
 GRANT [nom-rol] TO [nomUsuari];
 `````
 ---
-# Index i sequencies
+### Index i sequencies
 L'index serveix per crear una llista ordenada de les dades que vulguis i fer consultes més rapides:
 `````sql
 CREATE INDEX [nomIndex]
@@ -355,7 +355,7 @@ INSERT INTO users(nom) VALUES('joan');
 
 ---
 
-# Vistes
+### Vistes
 "Taules" creades a partir d'una consulta, s'actualitza automaticament cada cop que es modifica el contingut de la taula o taules les quals es consulten
 `````sql
 CREATE VIEW [nomVista] AS
@@ -438,7 +438,7 @@ WHERE a.idProf = p.id;
 
 Per fer consultes multitaula sense join fas un = al where:
 `````sql
--SELECT [taula.camp], [taula.camp]
+SELECT [taula.camp], [taula.camp]
 FROM taula1, taula2
 WHERE [taula1-PK] = [taula2-FK] --o la relacio que tinguin, si estan relacionades per department_id(pk de taula 1 y fk de taula2)
 `````
