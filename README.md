@@ -435,3 +435,10 @@ WHERE a.idProf = p.id;
 
 --Com a resultat es veuran tots als alumnes i el nom del seu profe
 `````
+
+Per fer consultes multitaula sense join fas un = al where:
+`````sql
+-SELECT [taula.camp], [taula.camp]
+FROM taula1, taula2
+WHERE [taula1-PK] = [taula2-FK] --o la relacio que tinguin, si estan relacionades per department_id(pk de taula 1 y fk de taula2)
+`````
