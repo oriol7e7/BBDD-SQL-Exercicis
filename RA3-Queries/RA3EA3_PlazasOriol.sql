@@ -10,6 +10,11 @@ from departments as d, employees as e
 where e.department_id = d.department_id AND d.department_name NOT IN('IT', 'PURCHASING');
 
 
+--ex3
+select l.city, d.department_name
+from locations as l, departments as d
+where l.location_id = d.location_id AND LOWER(d.department_name) LIKE '_u%';
+
 --ex4
 select l.city, d.*
 from locations as l, departments as d
@@ -31,4 +36,24 @@ from departments as d, employees as e, job_history as jh
 WHERE d.department_id = e.department_id 
 AND e.employee_id = jh.employee_id 
 AND jh.department_id = d.department_id 
-AND EXTRACT(YEAR FROM hire_date) < 1998;
+AND EXTRACT(YEAR FROM jh.end_date) = 1993;
+
+--ex8
+SELECT e.first_name, e.last_name, d.department_name
+from employees as e, departments as d, locations as l
+WHERE e.department_id = d.department_id AND d.location_id = l.location_id AND LOWER(l.city) LIKE 'seattle';
+
+--ex9
+SELECT d.department_name, l.city, c.country_name
+FROM departments as d, locations as l, countries as c
+WHERE l.country_id = c.country_id AND l.location_id = d.location_id;
+
+--ex10
+SELECT e.last_name, e.job_id, m.first_name AS "Nom jefe"
+FROM employees as e, employees as m
+WHERE e.manager_id = m.employee_id AND e.job_id = m.job_id;         
+
+--ex11
+SELECT e.last_name, e.job_id, m.first_name AS "Nom jefe", j.job_title
+FROM employees as e, employees as m, jobs as j
+WHERE e.manager_id = m.employee_id AND e.job_id = m.job_id AND e.job_id = j.job_id;     
