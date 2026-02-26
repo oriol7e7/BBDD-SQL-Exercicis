@@ -435,10 +435,63 @@ WHERE a.idProf = p.id;
 
 --Com a resultat es veuran tots als alumnes i el nom del seu profe
 `````
+### Funcions i agrupacions (GROUP BY)
+#### Funcions
+##### SUM()
+Funcio que retorna la suma dels valors del camp per parametre
+``````sql
+--PER CADA CLIENT, MOSTRA LA SUMA DE LES SEVES FACTURES -> AGRUPA PER CADA CLIENT I MOSTRA LA SUMA DE TOTAL_FACTURA DE CADA GRUP
+SELECT c.nom, SUM(p.total_factura) 
+FROM clients c
+JOIN comandes p ON c.id_client = p.id_client
+GROUP BY c.nom
+ORDER BY total_gastat DESC;
+``````
+##### MAX()
+Funcio que retorna el valor màxim dels valors del camp per parametre
+``````sql
+--PER CADA CATEGORIA, MOSTRA EL VALOR MAXIM DE PREU
+SELECT cat.nom_categoria, MAX(prod.preu)
+FROM categories AS cat
+JOIN productes AS prod ON cat.id_categoria = prod.id_categoria
+GROUP BY cat.nom_categoria
+HAVING MAX(prod.preu) > 100;
+``````
+##### MIN()
+Funcio que retorna el valor més petit dels valors del camp per parametre
+``````sql
+--PER CADA CATEGORIA, MOSTRA EL VALOR MES PETIT DE PREU
+SELECT cat.nom_categoria, MIN(prod.preu)
+FROM categories AS cat
+JOIN productes AS prod ON cat.id_categoria = prod.id_categoria
+GROUP BY cat.nom_categoria
+HAVING MAX(prod.preu) > 100;
+``````
+##### AVG()
+Funcio que retorna la mitja dels valors del camp passat per parametre
+`````sql
+--PER CADA ASSIGNATURA MOSTRA LA MITJA DE LA NOTA
+SELECT a.nom_assignatura, AVG(n.nota) AS mitja_assignatura
+FROM assignatures AS a
+JOIN notes AS n ON a.id_assignatura = n.id_assignatura
+GROUP BY a.nom_assignatura
+HAVING COUNT(n.id_alumne) > 5;
+`````
+#### Agrupacio i ordre
+##### COUNT()
+Funcio que retorna el numero de registres del camp pasat per parametre -> també pot calcular els num de registres per grup
 
-Per fer consultes multitaula sense join fas un = al where:
+### Consultes mutitaula (WHERE = || JOIN)
+Per fer consultes multitaula amb WHERE has de relacionar amb = el camp pel que es relacionen les taules:
 `````sql
 SELECT [taula.camp], [taula.camp]
 FROM taula1, taula2
-WHERE [taula1-PK] = [taula2-FK] --o la relacio que tinguin, si estan relacionades per department_id(pk de taula 1 y fk de taula2)
+WHERE [taula1-PK] = [taula2-FK] --o la relacio que tinguin, si estan relacionades per department_id(pk de taula 1 y fk de taula2) seria t1.dep_id = t2.dep_id;
+`````
+
+Per fer-les amb JOIN és igual pero no cal el where i al from només i haura una taula, les relaciones amb JOIN nomTaula ON igualtat
+`````sql
+SELECT [taula.camp], [taula.camp]
+FROM taula1 as t1
+JOIN taula2 as t2 2 ON t1.dep_id = t2.dep_id;
 `````
