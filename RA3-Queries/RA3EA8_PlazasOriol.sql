@@ -40,7 +40,7 @@ WHERE e.salary < (
 --ex5
 SELECT e.last_name
 FROM employees e
-WHERE e.department_id != (
+WHERE e.department_id <> (
     SELECT d.department_id
     FROM employees d
     WHERE d.first_name = 'Steven'
