@@ -26,12 +26,14 @@ ORDER BY SUM(e.salary) DESC;
 --ex3
 SELECT e.first_name, e.last_name, d.department_name, e.hire_date
 FROM employees e
-JOIN departments d ON e.department_id = d.department_id
-WHERE e.hire_date = (
-    SELECT MIN(e2.hire_date)
-    FROM employees e2
-    WHERE e2.department_id = e.department_id
+    JOIN departments d
+        ON e.department_id = d.department_id
+WHERE (e.department_id, e.hire_date) IN (
+    SELECT department_id, MIN(hire_date)
+    FROM employees
+    GROUP BY department_id
 );
+
 
 
 --ex4
