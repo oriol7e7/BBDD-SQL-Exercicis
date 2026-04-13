@@ -1,5 +1,5 @@
 # APUNTS POSTGRESQL
-#### TODO: DQL (QUERIES) having, group by, orderby, functions(avg, count, max, min, sum)
+#### TODO: DQL (QUERIES) having, group by, orderby, functions(avg, count, max, min, sum) - JOINS - SUBQUERIES
 ## ÍNDEX DE CONTINGUTS
 
 * [1.  MetaComandes Bàsiques de Postgres](#metacomandes-bàsiques-postgres)
