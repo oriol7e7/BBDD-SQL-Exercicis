@@ -46,3 +46,37 @@ BEGIN
     raise notice '%', eLastName;
 end;
 $$
+
+/*
+Exercici 4. Crea un bloc anònim amb variables PL/SQL que mostri el salari de l'empleat amb id=120, has
+de declarar una variable de tipus salary.
+*/
+
+do $$
+DECLARE
+    esalary EMPLOYEES.salary%TYPE;
+BEGIN
+    SELECT employees.salary
+    into esalary
+    from employees
+    WHERE employee_id = 120;
+    raise notice '%', esalary;
+end;
+$$
+
+/*
+Exercici 5. Crea un bloc anònim amb una variable PL/SQL que imprimeixi el salari més alt dels
+treballadors que treballen al departament 'SALES'.
+*/
+
+do $$
+DECLARE
+    highestSalary EMPLOYEES.salary%TYPE;
+BEGIN
+    SELECT MAX(employees.salary)
+    into highestSalary
+    from employees
+    WHERE department_id = (SELECT d.department_id FROM departments d WHERE UPPER(department_NAME) = 'SALES');
+    raise notice '%', highestSalary;
+end;
+$$
