@@ -87,4 +87,54 @@ begin
 end;
 $$
 
+--EX5 - FOR LOOP
+do $$
+declare
+    min INTEGER;
+    max INTEGER;
+begin
+    min := 1;
+    max := :max;
+    if max >= 2 then
+        for i in min..max LOOP
+            raise notice '%', i;
+        end loop;
+    end if;
+end;
+$$
+
+--EX5 - WHILE
+do $$
+declare
+    min INTEGER;
+    max INTEGER;
+    iterator INTEGER;
+begin
+    min := 1;
+    max := :max;
+    iterator := min;
+    if max >= 2 then
+        WHILE iterator <= max LOOP
+        raise notice '%', iterator;
+        iterator := iterator+1;
+        END LOOP;
+    end if;
+end;
+$$
+
+--EX6
+do $$
+declare
+    vmin integer := :vmin;   
+    vmax integer := :vmax;    
+    vstep integer := :vstep;  
+begin
+    if vmin < vmax AND vstep > 1 then
+        for i in vmin..vmax by vstep loop
+            raise notice '%', i;
+        end loop;
+    end if;
+end;
+$$;
+
 
