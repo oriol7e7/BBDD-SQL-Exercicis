@@ -44,7 +44,7 @@ BEGIN
 END;
 $$;
 
---EX2
+--EX3
 CREATE OR REPLACE PROCEDURE PROC_EMP_INFO(id employees.employee_id%type) AS $$
     DECLARE
         empl employees%rowtype;
@@ -65,5 +65,35 @@ DECLARE
     input integer := :input::integer;
 BEGIN
     CALL PROC_EMP_INFO(input);
+END;
+$$;
+
+--EX4
+CREATE OR REPLACE PROCEDURE PROC_ALTA_JOB(p_job_id jobs.job_id%type, p_job_title jobs.job_title%type, p_min_salary jobs.min_salary%type, p_max_salary jobs.max_salary%type) AS $$
+    BEGIN
+        IF p_min_salary >= 0 AND p_max_salary >= 0 AND p_min_salary < p_max_salary THEN
+            INSERT INTO jobs (job_id, job_title, min_salary, max_salary) 
+            VALUES (p_job_id, p_job_title, p_min_salary, p_max_salary);
+        ELSE
+            IF p_min_salary < 0 OR p_max_salary < 0 THEN
+                RAISE NOTICE 'Error: El salari minim i maxim no poden ser negatius.';
+            END IF;
+
+            IF p_min_salary >= p_max_salary THEN
+                RAISE NOTICE 'Error: El salari minim ha de ser mes petit que el salari maxim.';
+            END IF;
+        END IF;
+    END;
+    $$ LANGUAGE plpgsql;
+
+
+DO $$
+DECLARE
+    input_id jobs.job_id%type := :input_id::varchar;
+    input_title jobs.job_title%type := :input_title::varchar;
+    input_min numeric := :input_min::numeric;
+    input_max numeric := :input_max::numeric;
+BEGIN
+    CALL PROC_ALTA_JOB(input_id, input_title, input_min, input_max);
 END;
 $$;
