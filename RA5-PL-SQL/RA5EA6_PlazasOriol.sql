@@ -2,7 +2,7 @@
 EX1
 */
 --PROCEDIMENT
-CREATE OR REPLACE PROCEDURE proc_alta_dept(par_id departments.department_id%type, par_name departments.department_name%type, par_managerId departments.manager_id%type, par_locationId departments.location_id%type) LANGUAGE plpgsql AS $$
+CREATE OR REPLACE PROCEDURE proc_alta_dept(par_id departments.department_id%type, par_name departments.department_name%type, par_managerId departments.manager_id%type, par_locationId departments.location_id%type) AS $$
 BEGIN
     INSERT INTO departments(department_id, department_name, manager_id, location_id) VALUES(par_id, par_name, par_managerId, par_locationId);
     raise notice 'success';
