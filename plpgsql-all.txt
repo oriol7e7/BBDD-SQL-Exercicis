@@ -1,0 +1,1566 @@
+
+================================================================================
+===== RA5EA1_PlazasOriol.sql - Blocs Anònims Bàsics =====
+================================================================================
+
+/*
+Exercici 1. Crea un bloc anònim amb tres variables de tipus NUMERIC. Aquestes variables
+han de tenir un valor inicial de 15, 40 i 35 respectivament. El bloc ha de sumar aquestes tres variables i
+mostrar per pantalla 'LA SUMA TOTAL ÉS: (la suma de les variables)'.
+*/
+do $$
+DECLARE
+    var1 NUMERIC(5) :=15;
+    var2 NUMERIC(5) :=40;
+    var3 NUMERIC(5) :=35;
+    result numeric(6,2);
+BEGIN
+    result = var1+var2+var3;
+    raise notice 'LA SUMA TOTAL ÉS%:', result;
+end;
+$$
+
+/*
+Exercici 2. Crea un bloc anònim que ha d'imprimir el cognom de l'empleat en majúscules amb codi
+número 104 de la taula (EMPLOYEES), on has de declarar una variable de tipus last_name.
+*/
+do $$
+DECLARE
+    eLastName EMPLOYEES.last_name%TYPE;
+BEGIN
+    SELECT employees.last_name
+    into eLastName
+    from employees
+    WHERE employee_id = 104;
+    raise notice '%', eLastName;
+end;
+$$
+
+/*
+Exercici 3. Crea un bloc anònim que ha d'imprimir el cognom en majúscules de l'empleat amb l'id
+introduït per pantalla.
+*/
+do $$
+DECLARE
+    eLastName EMPLOYEES.last_name%TYPE;
+BEGIN
+    SELECT employees.last_name
+    into eLastName
+    from employees
+    WHERE employee_id = :id;
+    raise notice '%', eLastName;
+end;
+$$
+
+/*
+Exercici 4. Crea un bloc anònim amb variables PL/SQL que mostri el salari de l'empleat amb id=120, has
+de declarar una variable de tipus salary.
+*/
+
+do $$
+DECLARE
+    esalary EMPLOYEES.salary%TYPE;
+BEGIN
+    SELECT employees.salary
+    into esalary
+    from employees
+    WHERE employee_id = 120;
+    raise notice '%', esalary;
+end;
+$$
+
+/*
+Exercici 5. Crea un bloc anònim amb una variable PL/SQL que imprimeixi el salari més alt dels
+treballadors que treballen al departament 'SALES'.
+*/
+
+do $$
+DECLARE
+    highestSalary EMPLOYEES.salary%TYPE;
+BEGIN
+    SELECT MAX(employees.salary)
+    into highestSalary
+    from employees
+    WHERE department_id = (SELECT d.department_id FROM departments d WHERE UPPER(department_NAME) = 'SALES');
+    raise notice '%', highestSalary;
+end;
+$$
+
+
+================================================================================
+===== RA5EA2_PlazasOriol.sql - Estructures de Control (IF, CASE, LOOPS) =====
+================================================================================
+
+--EX1
+do $$
+    declare
+        num1 REAL;
+        num2 REAL;
+        result Numeric(10,2);
+    begin
+        num1 := :num1;
+        num2 := :num2;
+        if num1 < 0 OR num2 <0 then
+            raise notice 'Han de ser numeros positius';
+        else
+            result := num1/num2 + num2;
+            raise notice '%', result;
+        end if;
+    end;
+$$
+
+--EX2
+do $$
+    declare
+        num1 REAL;
+        num2 REAL;
+        result Numeric(10,2);
+    begin
+        num1 := :num1;
+        num2 := :num2;
+        if num1 < 0 OR num2 <0 then
+            raise notice 'Han de ser numeros positius';
+        elsif num2>num1 then
+            raise notice 'Error! el primer número ha de ser més gran que el segon.';
+        else
+            result := num1/num2 + num2;
+            raise notice '%', result;
+        end if;
+    end;
+$$
+
+
+--EX3
+do $$
+declare
+    age INTEGER;
+begin
+    age := :age;
+    case
+        when age between 0 and 17 then
+            raise notice 'Ets menor';
+        when age between 18 and 40 then
+            raise notice 'Ja ets major de edat';
+        when age > 40 then
+            raise notice 'Ja ets força gran';
+        when age < 0 then
+            raise notice 'La edat no pot ser negativa';
+    end case;
+end;
+$$
+
+
+--EX4
+do $$
+declare
+    a real;
+    b real;
+    operation integer;
+begin
+    a := :a;
+    b := :b;
+    raise notice 'opció 1 SUMAR, opció 2 RESTAR, opció 3 MULTIPLICAR, opció 4 DIVIDIR .';
+    operation := :operation;
+    case operation
+        when 1 then
+            raise notice 'has escollit suma';
+            RAISE NOTICE '% + % = %', a, b, a + b;
+        when 2 then
+            raise notice 'has escollit resta';
+            RAISE NOTICE '% - % = %', a, b, a - b;
+        when 3 then
+            raise notice 'has escollit multiplicacio';
+            RAISE NOTICE '% * % = %', a, b, a * b;
+        when 4 then
+            raise notice 'has escollit divisio';
+            RAISE NOTICE '% / % = %', a, b, a / b;
+        else
+            RAISE NOTICE 'Opcio no valida';
+    end case;
+end;
+$$
+
+--EX5 - FOR LOOP
+do $$
+declare
+    min INTEGER;
+    max INTEGER;
+begin
+    min := 1;
+    max := :max;
+    if max >= 2 then
+        for i in min..max LOOP
+            raise notice '%', i;
+        end loop;
+    end if;
+end;
+$$
+
+--EX5 - WHILE
+do $$
+declare
+    min INTEGER;
+    max INTEGER;
+    iterator INTEGER;
+begin
+    min := 1;
+    max := :max;
+    iterator := min;
+    if max >= 2 then
+        WHILE iterator <= max LOOP
+        raise notice '%', iterator;
+        iterator := iterator+1;
+        END LOOP;
+    end if;
+end;
+$$
+
+--EX6
+do $$
+declare
+    vmin integer := :vmin;   
+    vmax integer := :vmax;    
+    vstep integer := :vstep;  
+begin
+    if vmin < vmax AND vstep > 1 then
+        for i in vmin..vmax by vstep loop
+            raise notice '%', i;
+        end loop;
+    end if;
+end;
+$$;
+
+
+================================================================================
+===== RA5EA3_PlazasOriol.sql - Funcions i Procediments =====
+================================================================================
+
+--EX1
+create or replace function FUNC_DUPLICAR_QUANTITAT(num real) RETURNS real as
+    $$
+    declare
+        result real;
+    BEGIN
+        result := num*2;
+        return result;
+    end;
+    $$ language plpgsql;
+
+
+DO $$
+DECLARE
+    input real := :input::real;
+    dupl real;
+BEGIN
+    dupl := FUNC_DUPLICAR_QUANTITAT(input);
+    RAISE NOTICE '%', dupl;
+END;
+$$;
+
+
+--EX2
+CREATE OR REPLACE FUNCTION FUNC_FACTORIAL(num INTEGER) RETURNS INTEGER AS $$
+    DECLARE
+        result INTEGER := 1;
+    BEGIN
+        FOR i IN 1..num LOOP
+            result = result * i;
+            END LOOP;
+        RETURN result;
+    END;
+    $$ LANGUAGE plpgsql;
+
+
+DO $$
+DECLARE
+    input INTEGER := :input::INTEGER;
+    fact INTEGER;
+BEGIN
+    fact := FUNC_FACTORIAL(input);
+    RAISE NOTICE 'FACTORIAL: %', fact;
+END;
+$$;
+
+--EX3
+CREATE OR REPLACE PROCEDURE PROC_EMP_INFO(id employees.employee_id%type) AS $$
+    DECLARE
+        empl employees%rowtype;
+        vcarrec jobs.job_title%type;
+    BEGIN
+        SELECT e.employee_id as codi_empleat, e.first_name as nom_empleat, j.job_title as carrec, e.salary as salari
+        INTO empl.employee_id, empl.first_name, vcarrec, empl.salary
+        FROM employees e
+            JOIN jobs j
+                ON e.job_id = j.job_id
+        WHERE e.employee_id = id;
+    END;
+    $$ LANGUAGE plpgsql;
+
+
+DO $$
+DECLARE
+    input integer := :input::integer;
+BEGIN
+    CALL PROC_EMP_INFO(input);
+END;
+$$;
+
+--EX4
+CREATE OR REPLACE PROCEDURE PROC_ALTA_JOB(p_job_id jobs.job_id%type, p_job_title jobs.job_title%type, p_min_salary jobs.min_salary%type, p_max_salary jobs.max_salary%type) AS $$
+    BEGIN
+        IF p_min_salary >= 0 AND p_max_salary >= 0 AND p_min_salary < p_max_salary THEN
+            INSERT INTO jobs (job_id, job_title, min_salary, max_salary) 
+            VALUES (p_job_id, p_job_title, p_min_salary, p_max_salary);
+        ELSE
+            IF p_min_salary < 0 OR p_max_salary < 0 THEN
+                RAISE NOTICE 'Error: El salari minim i maxim no poden ser negatius.';
+            END IF;
+
+            IF p_min_salary >= p_max_salary THEN
+                RAISE NOTICE 'Error: El salari minim ha de ser mes petit que el salari maxim.';
+            END IF;
+        END IF;
+    END;
+    $$ LANGUAGE plpgsql;
+
+
+DO $$
+DECLARE
+    input_id jobs.job_id%type := :input_id::varchar;
+    input_title jobs.job_title%type := :input_title::varchar;
+    input_min numeric := :input_min::numeric;
+    input_max numeric := :input_max::numeric;
+BEGIN
+    CALL PROC_ALTA_JOB(input_id, input_title, input_min, input_max);
+END;
+$$;
+
+
+================================================================================
+===== RA5EA4_PlazasOriol.sql - Funcions i Procediments Avançats =====
+================================================================================
+
+--EX1
+CREATE OR REPLACE PROCEDURE proc_baixa_emp(id employees_copy.employee_id%type) AS $$
+    BEGIN
+        DELETE FROM employees WHERE employee_id = id;
+    END;
+    $$ LANGUAGE plpgsql;
+
+
+DO $$
+DECLARE
+    input employees.employee_id%type := :input_id::integer;
+BEGIN
+    CALL proc_baixa_emp(input);
+END;
+$$;
+
+
+--EX2
+CREATE OR REPLACE FUNCTION func_num_emp(deptId employees.department_id%type) RETURNS integer AS $$
+    DECLARE
+        v_count integer;
+    BEGIN
+        SELECT count(*) INTO v_count FROM employees WHERE department_id = deptId;
+        RETURN v_count;
+    END;
+    $$ LANGUAGE plpgsql;
+
+
+DO $$
+DECLARE
+    input employees.department_id%type := :input::integer;
+    v_result integer;
+BEGIN
+    v_result := func_num_emp(input_dept);
+    raise notice '%', v_result;
+END;
+$$;
+
+
+--EX3
+CREATE OR REPLACE FUNCTION func_cost_dept(deptId employees.department_id%type) RETURNS numeric AS $$
+    DECLARE
+        v_cost numeric;
+    BEGIN
+        SELECT sum(salary) INTO v_cost FROM employees WHERE department_id = deptId;
+        RETURN v_cost;
+    END;
+    $$ LANGUAGE plpgsql;
+
+
+DO $$
+DECLARE
+    input_dept employees.department_id%type := :input_dept::integer;
+    v_result numeric;
+BEGIN
+    v_result := func_cost_dept(input_dept);
+    raise notice '%', v_result;
+END;
+$$;
+
+
+--EX4
+CREATE OR REPLACE PROCEDURE proc_mod_com(id employees.employee_id%type) AS $$
+    DECLARE
+        v_salary employees.salary%type;
+    BEGIN
+        SELECT salary INTO v_salary FROM employees WHERE employee_id = id;
+
+        CASE
+            WHEN v_salary < 3000 THEN
+                UPDATE employees SET commission_pct = 0.1 WHERE employee_id = p_id;
+            WHEN v_salary >= 3000 AND v_salary <= 7000 THEN
+                UPDATE employees SET commission_pct = 0.15 WHERE employee_id = p_id;
+            WHEN v_salary > 7000 THEN
+                UPDATE employees SET commission_pct = 0.2 WHERE employee_id = p_id;
+        END CASE;
+    END;
+    $$ LANGUAGE plpgsql;
+
+
+DO $$
+DECLARE
+    input_id employees.employee_id%type := :input_id::integer;
+BEGIN
+    CALL proc_mod_com(input_id);
+END;
+$$;
+
+
+================================================================================
+===== RA5EA5_PlazasOriol.sql - Potència i Àrea de Circumferència =====
+================================================================================
+
+--EX1
+DO $$
+DECLARE
+    var_num1 NUMERIC := :v_num1::NUMERIC;
+    var_num2 INTEGER := :v_num2::INTEGER;
+    var_result NUMERIC := 1;
+BEGIN
+    IF var_num1 <= 0 OR var_num2 <= 0 THEN
+        RAISE NOTICE 'Error: Els numeros han de ser positius.';
+    ELSE
+        FOR i IN 1..var_num2 LOOP
+            var_result := var_result * var_num1;
+        END LOOP;
+
+        RAISE NOTICE 'El resultat és: %', var_result;
+    END IF;
+END;
+$$;
+
+--EX2
+CREATE OR REPLACE FUNCTION func_checkP(par_radi NUMERIC) RETURNS BOOLEAN AS $$
+BEGIN
+    IF par_radi > 0 THEN
+        RETURN TRUE;
+    ELSE
+        RAISE NOTICE 'Recorda que el número ha de ser positiu!!!';
+        RETURN FALSE;
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION func_calculArea(par_radi NUMERIC) RETURNS NUMERIC AS $$
+DECLARE
+    var_pi CONSTANT NUMERIC := 3.1416;
+    var_area NUMERIC := 0;
+BEGIN
+    IF func_checkP(par_radi) THEN
+        var_area := (par_radi * par_radi) * var_pi;
+    END IF;
+    
+    RETURN var_area;
+END;
+$$ LANGUAGE plpgsql;
+
+DO $$
+DECLARE
+    var_radi NUMERIC := :v_radi::NUMERIC;
+    var_area NUMERIC;
+BEGIN
+    var_area := func_calculArea(var_radi);
+    
+    IF var_area > 0 THEN
+        RAISE NOTICE 'Àrea de la circumferència de radi % és %', var_radi, var_area;
+    END IF;
+END;
+$$;
+
+
+--EX3
+CREATE OR REPLACE FUNCTION func_nom_manager(par_dept_id DEPARTMENTS.DEPARTMENT_ID%TYPE) RETURNS EMPLOYEES.FIRST_NAME%TYPE AS $$
+DECLARE
+    var_nom_manager EMPLOYEES.FIRST_NAME%TYPE;
+BEGIN
+    SELECT E.FIRST_NAME INTO var_nom_manager 
+    FROM DEPARTMENTS D 
+    JOIN EMPLOYEES E ON D.MANAGER_ID = E.EMPLOYEE_ID 
+    WHERE D.DEPARTMENT_ID = par_dept_id;
+    
+    RETURN var_nom_manager;
+END;
+$$ LANGUAGE plpgsql;
+
+DO $$
+DECLARE
+    var_dept_id DEPARTMENTS.DEPARTMENT_ID%TYPE := :v_dept_id::INTEGER;
+    var_nom_manager EMPLOYEES.FIRST_NAME%TYPE;
+BEGIN
+    var_nom_manager := func_nom_manager(var_dept_id);
+    RAISE NOTICE 'Mànager: %', var_nom_manager;
+END;
+$$;
+
+
+--EX4
+CREATE OR REPLACE PROCEDURE proc_dades_empl(par_emp_id EMPLOYEES.EMPLOYEE_ID%TYPE) AS $$
+DECLARE
+    reg_emp RECORD;
+BEGIN
+    SELECT E.FIRST_NAME, E.LAST_NAME, D.DEPARTMENT_NAME, D.LOCATION_ID 
+    INTO reg_emp
+    FROM EMPLOYEES E
+    JOIN DEPARTMENTS D ON E.DEPARTMENT_ID = D.DEPARTMENT_ID
+    WHERE E.EMPLOYEE_ID = par_emp_id;
+
+    RAISE NOTICE 'Nom: % | Cognom: % | Departament: % | Localitat: %', 
+                 reg_emp.FIRST_NAME, reg_emp.LAST_NAME, reg_emp.DEPARTMENT_NAME, reg_emp.LOCATION_ID;
+END;
+$$ LANGUAGE plpgsql;
+
+DO $$
+DECLARE
+    var_emp_id EMPLOYEES.EMPLOYEE_ID%TYPE := :v_emp_id::INTEGER;
+BEGIN
+    CALL proc_dades_empl(var_emp_id);
+END;
+$$;
+
+
+--EX5
+CREATE OR REPLACE PROCEDURE proc_alta_pais(par_country_id COUNTRIES.COUNTRY_ID%TYPE, par_country_name COUNTRIES.COUNTRY_NAME%TYPE, par_region_name REGIONS.REGION_NAME%TYPE) AS $$
+DECLARE
+    var_region_id REGIONS.REGION_ID%TYPE;
+    reg_country COUNTRIES%ROWTYPE;
+BEGIN
+    SELECT REGION_ID INTO var_region_id 
+    FROM REGIONS 
+    WHERE REGION_NAME = par_region_name;
+
+    INSERT INTO COUNTRIES (COUNTRY_ID, COUNTRY_NAME, REGION_ID) 
+    VALUES (par_country_id, par_country_name, var_region_id);
+
+    SELECT * INTO reg_country 
+    FROM COUNTRIES 
+    WHERE COUNTRY_ID = par_country_id;
+
+    RAISE NOTICE 'País inserit: %', reg_country.COUNTRY_NAME;
+END;
+$$ LANGUAGE plpgsql;
+
+DO $$
+DECLARE
+    var_country_id COUNTRIES.COUNTRY_ID%TYPE := :v_country_id::VARCHAR;
+    var_country_name COUNTRIES.COUNTRY_NAME%TYPE := :v_country_name::VARCHAR;
+    var_region_name REGIONS.REGION_NAME%TYPE := :v_region_name::VARCHAR;
+BEGIN
+    CALL proc_alta_pais(var_country_id, var_country_name, var_region_name);
+END;
+$$;
+
+
+================================================================================
+===== RA5EA6_PlazasOriol.sql - Gestió d'Excepcions =====
+================================================================================
+
+/*
+EX1
+*/
+--PROCEDIMENT
+CREATE OR REPLACE PROCEDURE proc_alta_dept(par_id departments.department_id%type, par_name departments.department_name%type, par_managerId departments.manager_id%type, par_locationId departments.location_id%type) AS $$
+BEGIN
+    INSERT INTO departments(department_id, department_name, manager_id, location_id) VALUES(par_id, par_name, par_managerId, par_locationId);
+    raise notice 'success';
+EXCEPTION
+    WHEN OTHERS THEN
+        RAISE EXCEPTION 'Error general';
+END;
+    $$ LANGUAGE plpgsql;
+
+
+--EXECUCIO
+do $$
+DECLARE
+    var_id departments.department_id%type := :v_id;
+    var_name departments.department_name%type := :v_name;
+    var_manager departments.manager_id%type := :v_manager;
+    var_loc departments.location_id%type := :v_loc;
+BEGIN
+    IF(func_compv_dept(var_id)) THEN
+        RAISE NOTICE 'El departament ja existeix';
+    ELSE
+        IF(func_comprovar_mng(var_manager) AND func_comprovar_loc(var_loc)) THEN
+            CALL proc_alta_dept(var_id, var_name, var_manager, var_loc);        
+        ELSE
+            RAISE NOTICE 'El manager o localització no existeixen';
+        END IF;
+    END IF;
+EXCEPTION
+    WHEN OTHERS THEN
+        RAISE NOTICE 'Error general';
+END;
+    $$ LANGUAGE plpgsql;
+
+--JOC DE PROVES
+/*
+CODIS ERRONIS - Output: El manager o localització no existeixen / El departament ja existeix
+CODIS EXISTENTS - Output: success
+*/
+
+
+/*
+EX 2
+*/
+--FUNCIO
+create or replace function func_nom_emp(par_id employees.employee_id%type) RETURNS employees.first_name%type AS $$
+    DECLARE
+        var_nomEmpleat employees.first_name%type;
+    BEGIN
+        SELECT employees.first_name
+        INTO STRICT var_nomEmpleat
+        FROM employees
+        WHERE employee_id = par_id;
+        RETURN var_nomEmpleat;
+    END;
+    $$ LANGUAGE plpgsql;
+
+--EXECUCIO
+do $$
+DECLARE
+    var_id employees.employee_id%type := :v_id;
+    var_nomEmpleat employees.first_name%type;
+BEGIN
+    var_nomEmpleat := func_nom_emp(var_id);
+    raise notice 'L empleat amb codi % es diu %', var_id, var_nomEmpleat;
+EXCEPTION
+    WHEN SQLSTATE 'P0002' THEN
+        RAISE NOTICE 'Error, no s ha trobar cap empleat amb id %', var_id;
+    WHEN OTHERS THEN
+        RAISE NOTICE 'Error Generar';
+END;
+    $$ LANGUAGE plpgsql;
+
+--JOC DE PROVES
+/*
+Empleat amb codi 35 - Output: Error, no s ha trobar cap empleat amb id 35
+Empleat amb codi 167 - Output: L empleat amb codi 167 es diu Amit
+*/
+
+
+================================================================================
+===== RA5EA7_PlazasOriol.sql - Gestió d'Excepcions II =====
+================================================================================
+
+/*
+EXERCICI 1
+*/
+
+--EXECUCIO
+DO $$
+DECLARE
+    var_id DEPARTMENTS.DEPARTMENT_ID%TYPE := :v_id;
+    var_nomdept DEPARTMENTS.DEPARTMENT_NAME%TYPE;
+BEGIN
+    SELECT DEPARTMENT_NAME
+    INTO STRICT var_nomdept
+    FROM DEPARTMENTS
+    WHERE DEPARTMENT_ID = var_id;
+
+    RAISE NOTICE 'Departament: %', var_nomdept;
+
+    IF (var_nomdept LIKE 'A%') THEN
+        RAISE NOTICE 'COMENÇA PER LA LLETRA A';
+    ELSE
+        RAISE NOTICE 'NO COMENÇA PER LA LLETRA A';
+    END IF;
+EXCEPTION
+    WHEN SQLSTATE 'P0002' THEN
+        RAISE NOTICE 'ERROR: no dades';
+    WHEN SQLSTATE 'P0003' THEN
+        RAISE NOTICE 'ERROR: retorna més files';
+    WHEN OTHERS THEN
+        RAISE NOTICE 'ERROR (sense definir)';
+END;
+$$ LANGUAGE plpgsql;
+
+--JOC DE PROVES
+/*
+Departament amb codi 9999 (No existeix) - Output: ERROR: no dades
+Departament amb codi 10 (Administration) - Output: Departament: Administration / COMENÇA PER LA LLETRA A
+Departament amb codi 20 (Marketing) - Output: Departament: Marketing / NO COMENÇA PER LA LLETRA A
+*/
+
+/*
+EXERCICI 2
+*/
+
+--FUNCIO
+CREATE OR REPLACE FUNCTION func_comprovar_loc(par_id LOCATIONS.LOCATION_ID%TYPE) RETURNS BOOLEAN AS $$
+DECLARE
+    var_count INTEGER;
+BEGIN
+    SELECT COUNT(*)
+    INTO var_count
+    FROM LOCATIONS
+    WHERE LOCATION_ID = par_id;
+
+    IF (var_count > 0) THEN
+        RETURN TRUE;
+    ELSE
+        RETURN FALSE;
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+--PROCEDIMENT
+CREATE OR REPLACE PROCEDURE proc_loc_address(par_id LOCATIONS.LOCATION_ID%TYPE, par_address LOCATIONS.STREET_ADDRESS%TYPE) AS $$
+BEGIN
+    UPDATE LOCATIONS
+    SET STREET_ADDRESS = par_address
+    WHERE LOCATION_ID = par_id;
+EXCEPTION
+    WHEN OTHERS THEN
+    RAISE EXCEPTION 'Error general al procediment';
+END;
+$$ LANGUAGE plpgsql;
+
+--EXECUCIO
+DO $$
+DECLARE
+    var_id LOCATIONS.LOCATION_ID%TYPE := :v_id;
+    var_address LOCATIONS.STREET_ADDRESS%TYPE := :v_address;
+BEGIN
+    IF (func_comprovar_loc(var_id)) THEN
+        CALL proc_loc_address(var_id, var_address);
+        RAISE NOTICE 'Adreça modificada amb exit';
+    ELSE
+        RAISE NOTICE 'La localitzacio no existeix';
+    END IF;
+EXCEPTION
+    WHEN OTHERS THEN
+        RAISE NOTICE 'Error general a l execucio';
+END;
+$$ LANGUAGE plpgsql;
+
+--JOC DE PROVES
+/*
+Localització amb codi 9999 i adreça 'Carrer Nou 1' - Output: La localitzacio no existeix
+Localització amb codi 1700 i adreça 'Carrer Nou 1' - Output: Adreça modificada amb exit
+*/
+
+
+================================================================================
+===== RA5EA8_PlazasOriol.sql - Cursors I =====
+================================================================================
+
+/*
+EX1
+*/
+
+--FOR IN
+DO $$
+DECLARE
+    var_emp employees%ROWTYPE;
+BEGIN
+    FOR var_emp IN SELECT * FROM employees LOOP
+        RAISE NOTICE 'EMPLEAT:';
+        RAISE NOTICE '%, %, %, %, %', var_emp.employee_id, var_emp.first_name, var_emp.salary, COALESCE(var_emp.commission_pct, 0), var_emp.hire_date;
+        RAISE NOTICE '=======================';
+        END LOOP;
+END;
+$$;
+
+--OPEN - FETCH - CLOSE
+DO $$
+DECLARE
+    var_emp employees%ROWTYPE;
+    emp_cursor CURSOR FOR
+    SELECT *
+    FROM employees;
+BEGIN
+    OPEN emp_cursor;
+        LOOP
+            FETCH emp_cursor INTO var_emp;
+            EXIT WHEN NOT FOUND;
+            RAISE NOTICE 'EMPLEAT:';
+            RAISE NOTICE '%, %, %, %, %', var_emp.employee_id, var_emp.first_name, var_emp.salary, COALESCE(var_emp.commission_pct, 0), var_emp.hire_date;
+            RAISE NOTICE '=======================';
+        END LOOP;
+    CLOSE emp_cursor;
+END;
+$$;
+
+/*
+EX2
+*/
+
+--FUNCIO CONTROL NEGATIUS
+CREATE OR REPLACE function func_control_neg(num real) returns bool as $$
+    BEGIN
+        IF num<0 THEN
+            RETURN FALSE;
+        ELSE
+            RETURN TRUE;
+        END IF;
+    END;
+$$ language plpgsql;
+
+
+--OPEN - FETCH - CLOSE
+DO $$
+DECLARE
+    var_emp employees%ROWTYPE;
+    var_salary real;
+    emp_cursor CURSOR (par_salary real) FOR
+    SELECT *
+    FROM employees
+    WHERE salary>par_salary;
+BEGIN
+    var_salary := :v_salary;
+    IF(func_control_neg(var_salary)) THEN
+        OPEN emp_cursor(var_salary);
+            LOOP
+                FETCH emp_cursor INTO var_emp;
+                EXIT WHEN NOT FOUND;
+                RAISE NOTICE 'EMPLEAT:';
+                RAISE NOTICE '%, %, %', var_emp.employee_id, var_emp.first_name, var_emp.salary;
+                RAISE NOTICE '=======================';
+            END LOOP;
+        CLOSE emp_cursor;
+    ELSE
+        RAISE NOTICE 'ERROR: salari negatiu i ha de ser positiu';
+    END IF;
+END;
+$$;
+
+--FOR IN
+
+DO $$
+DECLARE
+    var_emp employees%ROWTYPE;
+    var_salary real;
+    emp_cursor CURSOR (par_salary real) FOR
+    SELECT *
+    FROM employees
+    WHERE salary>par_salary;
+BEGIN
+    var_salary := :v_salary;
+    IF(func_control_neg(var_salary)) THEN
+        FOR var_emp in emp_cursor(var_salary) LOOP
+            RAISE NOTICE 'EMPLEAT:';
+            RAISE NOTICE '%, %, %', var_emp.employee_id, var_emp.first_name, var_emp.salary;
+            RAISE NOTICE '=======================';
+            END LOOP;
+    ELSE
+        RAISE NOTICE 'ERROR: salari negatiu i ha de ser positiu';
+    END IF;
+END;
+$$;
+
+
+================================================================================
+===== RA5EA9_PlazasOriol.sql - Cursors II (JOIN i RECORD) =====
+================================================================================
+
+/*
+EX 1
+*/
+
+--OPEN, FETCH, CLOSE
+DO $$
+DECLARE
+    var_dept_name DEPARTMENTS.DEPARTMENT_NAME%TYPE;
+    var_location_id DEPARTMENTS.LOCATION_ID%TYPE;
+    var_city LOCATIONS.CITY%TYPE;
+    dept_cursor CURSOR FOR
+        SELECT D.DEPARTMENT_NAME, D.LOCATION_ID, L.CITY
+        FROM DEPARTMENTS D
+        JOIN LOCATIONS L ON D.LOCATION_ID = L.LOCATION_ID;
+BEGIN
+    OPEN dept_cursor;
+    LOOP
+        FETCH dept_cursor INTO var_dept_name, var_location_id, var_city;
+        EXIT WHEN NOT FOUND;
+        RAISE NOTICE 'DEPARTAMENT:';
+        RAISE NOTICE '%, %, %', var_dept_name, var_location_id, var_city;
+        RAISE NOTICE '=======================';
+    END LOOP;
+    CLOSE dept_cursor;
+END;
+$$;
+
+--FOR 
+DO $$
+DECLARE
+    reg_dept RECORD;
+BEGIN
+    FOR reg_dept IN 
+        SELECT D.DEPARTMENT_NAME, D.LOCATION_ID, L.CITY 
+        FROM DEPARTMENTS D 
+        JOIN LOCATIONS L ON D.LOCATION_ID = L.LOCATION_ID 
+    LOOP
+        RAISE NOTICE 'DEPARTAMENT:';
+        RAISE NOTICE '%, %, %', reg_dept.DEPARTMENT_NAME, reg_dept.LOCATION_ID, reg_dept.CITY;
+        RAISE NOTICE '=======================';
+    END LOOP;
+END;
+$$;
+
+
+/*
+EX 2
+*/
+
+--OPEN, FETCH, CLOSE 
+DO $$
+DECLARE
+    reg_emp RECORD;
+    emp_cursor CURSOR FOR
+        SELECT E.EMPLOYEE_ID, E.FIRST_NAME, D.DEPARTMENT_ID, D.DEPARTMENT_NAME
+        FROM EMPLOYEES E
+        JOIN DEPARTMENTS D ON E.DEPARTMENT_ID = D.DEPARTMENT_ID;
+BEGIN
+    OPEN emp_cursor;
+    LOOP
+        FETCH emp_cursor INTO reg_emp;
+        EXIT WHEN NOT FOUND;
+        RAISE NOTICE 'EMPLEAT i DEPARTAMENT:';
+        RAISE NOTICE '%, %, %, %', reg_emp.EMPLOYEE_ID, reg_emp.FIRST_NAME, reg_emp.DEPARTMENT_ID, reg_emp.DEPARTMENT_NAME;
+        RAISE NOTICE '=======================';
+    END LOOP;
+    CLOSE emp_cursor;
+END;
+$$;
+
+-- FOR
+DO $$
+DECLARE
+    reg_emp RECORD;
+BEGIN
+    FOR reg_emp IN 
+        SELECT E.EMPLOYEE_ID, E.FIRST_NAME, D.DEPARTMENT_ID, D.DEPARTMENT_NAME 
+        FROM EMPLOYEES E 
+        JOIN DEPARTMENTS D ON E.DEPARTMENT_ID = D.DEPARTMENT_ID 
+    LOOP
+        RAISE NOTICE 'EMPLEAT i DEPARTAMENT:';
+        RAISE NOTICE '%, %, %, %', reg_emp.EMPLOYEE_ID, reg_emp.FIRST_NAME, reg_emp.DEPARTMENT_ID, reg_emp.DEPARTMENT_NAME;
+        RAISE NOTICE '=======================';
+    END LOOP;
+END;
+$$;
+
+
+================================================================================
+===== RA5EA10_PlazasOriol.sql - Cursors III (Cursors Avançats) =====
+================================================================================
+
+/*
+EX1
+*/
+
+--OPEN - FETCH - CLOSE
+DO $$
+DECLARE
+    var_dept_id DEPARTMENTS.DEPARTMENT_ID%TYPE;
+    reg_emp RECORD;
+    curs_emp CURSOR (par_dept_id DEPARTMENTS.DEPARTMENT_ID%TYPE) FOR
+        SELECT EMPLOYEE_ID, LAST_NAME
+        FROM EMPLOYEES
+        WHERE DEPARTMENT_ID = par_dept_id;
+BEGIN
+    var_dept_id := :v_dept_id;
+    OPEN curs_emp(var_dept_id);
+        LOOP
+            FETCH curs_emp INTO reg_emp;
+            EXIT WHEN NOT FOUND;
+            RAISE NOTICE 'EMPLEAT:';
+            RAISE NOTICE '%, %', reg_emp.EMPLOYEE_ID, reg_emp.LAST_NAME;
+            RAISE NOTICE '=======================';
+        END LOOP;
+    CLOSE curs_emp;
+END;
+$$;
+
+
+/*
+EX2
+*/
+
+--FUNCIO COMPROVAR DEPARTAMENT
+CREATE OR REPLACE FUNCTION func_comp_dep(par_dept_id DEPARTMENTS.DEPARTMENT_ID%TYPE) RETURNS BOOL AS $$
+DECLARE
+    var_count INT;
+BEGIN
+    SELECT COUNT(*) INTO var_count FROM DEPARTMENTS WHERE DEPARTMENT_ID = par_dept_id;
+    IF var_count > 0 THEN
+        RETURN TRUE;
+    ELSE
+        RETURN FALSE;
+    END IF;
+EXCEPTION
+    WHEN OTHERS THEN
+        RETURN FALSE;
+END;
+$$ LANGUAGE plpgsql;
+
+--FOR IN
+DO $$
+DECLARE
+    var_dept_id DEPARTMENTS.DEPARTMENT_ID%TYPE;
+    reg_emp RECORD;
+    curs_emp CURSOR (par_dept_id DEPARTMENTS.DEPARTMENT_ID%TYPE) FOR
+        SELECT EMPLOYEE_ID, LAST_NAME
+        FROM EMPLOYEES
+        WHERE DEPARTMENT_ID = par_dept_id;
+BEGIN
+    var_dept_id := :v_dept_id;
+    IF func_comp_dep(var_dept_id) THEN
+        FOR reg_emp IN curs_emp(var_dept_id) LOOP
+            RAISE NOTICE 'EMPLEAT:';
+            RAISE NOTICE '%, %', reg_emp.EMPLOYEE_ID, reg_emp.LAST_NAME;
+            RAISE NOTICE '=======================';
+        END LOOP;
+    ELSE
+        RAISE NOTICE 'El departament no existeix!';
+    END IF;
+END;
+$$;
+
+
+/*
+EX3
+*/
+
+--FUNCIO RETORNAR EMPLEATS DEPARTAMENT
+CREATE OR REPLACE FUNCTION func_emps_dep(par_dept_id DEPARTMENTS.DEPARTMENT_ID%TYPE) RETURNS SETOF EMPLOYEES AS $$
+BEGIN
+    RETURN QUERY
+    SELECT *
+    FROM EMPLOYEES
+    WHERE DEPARTMENT_ID = par_dept_id;
+END;
+$$ LANGUAGE plpgsql;
+
+
+/*
+EX4
+*/
+
+--Creació de la nova taula
+--CREATE TABLE EMP_NOU_SALARY AS SELECT * FROM EMPLOYEES;
+
+--OPEN - FETCH - CLOSE
+DO $$
+DECLARE
+    var_nou_salari REAL;
+    reg_emp RECORD;
+    curs_emps CURSOR FOR
+        SELECT EMPLOYEE_ID, LAST_NAME, SALARY
+        FROM EMP_NOU_SALARY;
+BEGIN
+    OPEN curs_emps;
+        LOOP
+            FETCH curs_emps INTO reg_emp;
+            EXIT WHEN NOT FOUND;
+            var_nou_salari := reg_emp.SALARY * 1.18;
+            RAISE NOTICE 'El salari antic de l`empleat % era % i el nou salari serà: %', reg_emp.LAST_NAME, reg_emp.SALARY, var_nou_salari;
+            
+            UPDATE EMP_NOU_SALARY
+            SET SALARY = var_nou_salari
+            WHERE EMPLOYEE_ID = reg_emp.EMPLOYEE_ID;
+            
+        END LOOP;
+    CLOSE curs_emps;
+END;
+$$;
+
+
+/*
+EX5
+*/
+
+--OPEN - FETCH - CLOSE
+DO $$
+DECLARE
+    var_dept_id DEPARTMENTS.DEPARTMENT_ID%TYPE;
+    reg_emp RECORD;
+    curs_emps CURSOR (par_dept_id DEPARTMENTS.DEPARTMENT_ID%TYPE) FOR
+        SELECT EMPLOYEE_ID, COMMISSION_PCT
+        FROM EMP_NOU_SALARY
+        WHERE DEPARTMENT_ID = par_dept_id;
+BEGIN
+    var_dept_id := :v_dept_id;
+    OPEN curs_emps(var_dept_id);
+        LOOP
+            FETCH curs_emps INTO reg_emp;
+            IF NOT FOUND THEN
+                RAISE NOTICE 'El departament % ja no té més empleats', var_dept_id;
+                EXIT;
+            END IF;
+            
+            IF reg_emp.COMMISSION_PCT IS NOT NULL THEN
+                UPDATE EMP_NOU_SALARY
+                SET COMMISSION_PCT = COMMISSION_PCT + 0.20
+                WHERE EMPLOYEE_ID = reg_emp.EMPLOYEE_ID;
+            ELSE
+                UPDATE EMP_NOU_SALARY
+                SET COMMISSION_PCT = 0
+                WHERE EMPLOYEE_ID = reg_emp.EMPLOYEE_ID;
+            END IF;
+            
+        END LOOP;
+    CLOSE curs_emps;
+EXCEPTION
+    WHEN OTHERS THEN
+        RAISE NOTICE 'S`ha produït un error.';
+END;
+$$;
+
+
+/*
+EX6
+*/
+
+--Creació de la nova taula
+--CREATE TABLE EMP_WITH_COMISS AS SELECT * FROM EMPLOYEES;
+
+--FOR IN
+DO $$
+DECLARE
+    reg_emp RECORD;
+    curs_emps CURSOR FOR
+        SELECT EMPLOYEE_ID
+        FROM EMP_WITH_COMISS
+        WHERE COMMISSION_PCT IS NULL;
+BEGIN
+    FOR reg_emp IN curs_emps LOOP
+        DELETE FROM EMP_WITH_COMISS
+        WHERE EMPLOYEE_ID = reg_emp.EMPLOYEE_ID;
+    END LOOP;
+END;
+$$;
+
+
+================================================================================
+===== RA5EA11_PlazasOriol.sql - TRIGGERS I =====
+================================================================================
+
+/*
+EX1
+*/
+
+--FUNCIO DEL TRIGGER
+CREATE OR REPLACE FUNCTION func_department_not_null () RETURNS TRIGGER LANGUAGE plpgsql AS
+    $$
+    BEGIN
+        IF NEW.department_name IS NULL THEN
+            RAISE EXCEPTION 'El nom del departament no pot ser null';
+        END IF;
+        RETURN NEW;
+    END;
+    $$;
+
+--TRIGGER
+CREATE OR REPLACE TRIGGER trig_nom_departament_notnull
+    BEFORE INSERT
+    ON departments
+    FOR EACH ROW
+    EXECUTE FUNCTION func_department_not_null();
+
+--JOC DE PROVES
+/*
+Insert amb valor null
+OUTPUT: ERROR: El nom del departament no pot ser null
+
+Insert amb valor correcte
+Sense errors
+*/
+
+/*
+EX2
+*/
+
+--FUNCIO DEL TRIGGER 
+CREATE OR REPLACE FUNCTION func_check_restriccions_empleats() RETURNS TRIGGER LANGUAGE plpgsql
+AS $$
+    BEGIN
+       IF TG_OP = 'INSERT' THEN
+         IF NEW.salary < 0 THEN
+             RAISE EXCEPTION 'L empleat no pot tindre salari negatiu';
+         END IF;
+       ELSIF TG_OP = 'UPDATE' THEN
+           IF NEW.salary != OLD.salary THEN
+               IF OLD.commission_pct IS NULL THEN
+                   RAISE EXCEPTION 'No es pot modificar el salari ja que l empleat no te comission pct';
+               ELSIF OLD.salary > NEW.salary THEN
+                   RAISE EXCEPTION 'El salari nomes es pot incrementar';
+               END IF;
+           END IF;
+       END IF;
+       RETURN NEW;
+    END;
+    $$;
+
+--TRIGGER
+CREATE OR REPLACE TRIGGER trig_restriccions_emp
+    BEFORE INSERT OR UPDATE
+    ON employees
+    FOR EACH ROW
+    EXECUTE FUNCTION func_check_restriccions_empleats();
+
+--JOC DE PROVES
+/*
+Insert amb salari negatiu
+OUTPUT: ERROR: L empleat no pot tindre salari negatiu
+
+Insert amb salari positiu i sense comissio
+Sense errors
+
+Update amb empleat sense comissio
+OUTPUT: ERROR: No es pot modificar el salari ja que l empleat no te comission pct
+
+Update per baixar salari
+OUTPUT: ERROR: El salari nomes es pot incrementar
+
+Update per pujar salari i tenint comissio
+Sense errors
+*/
+
+
+/*
+EX3
+*/
+--FUNCIO DEL TRIGGER
+CREATE OR REPLACE FUNCTION func_check_commission_major() RETURNS TRIGGER LANGUAGE plpgsql
+AS $$
+    BEGIN
+        IF NEW.commission_pct > NEW.salary THEN
+           RAISE EXCEPTION 'La comissio es major que el salari';
+        END IF;
+        RETURN NEW;
+    END;
+    $$;
+
+--TRIGGER
+CREATE OR REPLACE TRIGGER trig_comissio
+    BEFORE INSERT
+    ON employees
+    FOR EACH ROW
+    EXECUTE FUNCTION func_check_commission_major();
+
+--JOC DE PROVES
+/*
+Insert amb commission_pct major que salari
+OUTPUT: ERROR: La comissio es major que el salari
+
+Insert amb commission_pct menor que salari
+Sense errors
+*/
+
+
+/*
+EX 4
+*/
+
+--FUNCIO DEL TRIGGER
+CREATE OR REPLACE FUNCTION func_check_emp_modificacio() RETURNS TRIGGER LANGUAGE plpgsql
+AS $$
+    BEGIN
+        IF NEW.first_name != OLD.first_name THEN
+           RAISE EXCEPTION 'No es pot modificar el nom';
+        ELSIF NEW.employee_id != OLD.employee_id THEN
+            RAISE EXCEPTION 'No es pot modificar el codi d empleat';
+        ELSIF NEW.salary > OLD.salary * 1.10 THEN
+            RAISE EXCEPTION 'No es pot pujar el salari mes de un 10 percent';
+        END IF;
+        RETURN NEW;
+    END;
+    $$;
+
+--TRIGGER
+CREATE OR REPLACE TRIGGER trig_errada_modificacio
+    BEFORE UPDATE
+    ON employees
+    FOR EACH ROW
+    EXECUTE FUNCTION func_check_emp_modificacio();
+
+--JOC DE PROVES
+/*
+Update modificant el first_name
+OUTPUT: ERROR: No es pot modificar el nom
+
+Update modificant el employee_id
+OUTPUT: ERROR: No es pot modificar el codi d empleat
+
+Update pujant el salari mes d un 10%
+OUTPUT: ERROR: No es pot pujar el salari mes de un 10 percent
+
+Update amb canvis correctes (salari pujat menys d un 10%)
+Sense errors
+*/
+
+/*
+EX5
+*/
+
+--CREACIO TAULA AUXILIAR
+CREATE TABLE RESAUDITAREMP (
+    RESULTAT VARCHAR(200)
+);
+
+
+--CREACIO FUNCIO TRIGGER
+CREATE OR REPLACE FUNCTION func_log_emp_changes () RETURNS TRIGGER LANGUAGE plpgsql
+AS $$
+    BEGIN
+        INSERT INTO RESAUDITAREMP (RESULTAT) VALUES (CONCAT(NOW(), TG_NAME, TG_WHEN, TG_LEVEL, TG_OP));
+        IF TG_OP = 'DELETE' THEN
+            RETURN OLD;
+        END IF;
+        RETURN NEW;
+    END;
+    $$;
+
+
+--TRIGGER
+CREATE OR REPLACE TRIGGER trig_auditartaulaemp
+    BEFORE INSERT OR UPDATE OR DELETE
+    ON employees
+    FOR EACH ROW
+    EXECUTE FUNCTION func_log_emp_changes();
+
+--JOC DE PROVES
+/*
+INSERCIO I MODIFICACIO DE DADES:
+INSERT INTO employees (employee_id, first_name, last_name, email, hire_date, job_id, salary)
+VALUES (997, 'Joan', 'Puig', 'JPUIG', CURRENT_DATE, 'IT_PROG', 3000);
+
+UPDATE employees SET last_name = 'Colomer' WHERE employee_id = 997;
+
+DELETE FROM employees WHERE employee_id = 997;
+
+RESULTAT TAULA RESAUDITAREMP:
+2026-05-04 16:18:32.355604+00trig_auditartaulaempBEFOREROWINSERT
+2026-05-04 16:18:38.314995+00trig_auditartaulaempBEFOREROWUPDATE
+2026-05-04 16:18:40.54089+00trig_auditartaulaempBEFOREROWDELETE
+*/
+
+
+================================================================================
+===== RA5EA12_PlazasOriol.sql - TRIGGERS II (Avançats) =====
+================================================================================
+
+/*
+EX1
+*/
+--procediment
+CREATE OR REPLACE PROCEDURE proc_elim_nous_emps() LANGUAGE plpgsql
+AS $$
+    DECLARE
+        var_nomDept departments.department_name%type;
+        var_employee RECORD;
+          curs_emp CURSOR (par_dept_name departments.department_name%type) FOR
+            SELECT e.*
+            FROM employees e
+                JOIN departments d
+                ON d.department_id = e.department_id
+            WHERE LOWER(d.department_name) = LOWER(par_dept_name)
+            LIMIT 2;
+    BEGIN
+        var_nomDept := :v_nomDept;
+        IF func_comprv_dept(LOWER(var_nomDept)) THEN
+            OPEN curs_emp(LOWER(var_nomDept));
+                LOOP
+                    FETCH curs_emp INTO var_employee;
+                    EXIT WHEN NOT FOUND;
+                    RAISE NOTICE 'L`empleat %,%, amb id % serà eliminat.', var_employee.first_name, var_employee.last_name, var_employee.employee_id;
+                    DELETE FROM employees WHERE employee_id = var_employee.employee_id;
+                end loop;
+        ELSE
+            RAISE EXCEPTION 'No existeix el departament amb nom: %', var_nomDept;
+        end if;
+    end;
+    $$;
+
+--funcio
+CREATE OR REPLACE FUNCTION func_comprv_dept(par_nomDept departments.department_name%type) RETURNS boolean language plpgsql
+AS $$
+    DECLARE
+        var_numsDept real;
+    BEGIN
+        SELECT COUNT(*) INTO var_numsDept FROM departments WHERE department_name = par_nomDept;
+        IF var_numsDept > 0 THEN
+            RETURN TRUE;
+        ELSE
+            RETURN FALSE;
+        END IF;
+    end;
+    $$;
+
+call proc_elim_nous_emps();
+
+/*EX2*/
+--Creacio taules
+CREATE TABLE canvis_locations (
+id INT GENERATED ALWAYS AS IDENTITY,
+location_id numeric(11) NOT NULL,
+city_old VARCHAR(30) NOT NULL,
+city_new VARCHAR(30) not null,
+changed_on TIMESTAMP(6) NOT NULL);
+
+CREATE TABLE canvis (
+id serial,
+timestamp_ TIMESTAMP WITH TIME ZONE default NOW(),
+nom_trigger text,
+tipus_trigger text,
+nivell_trigger text,
+ordre text );
+
+--funcio trigger1
+CREATE OR REPLACE FUNCTION func_registrar_canvis_loc() RETURNS TRIGGER LANGUAGE plpgsql
+AS $$
+    BEGIN
+        IF NEW.city <> OLD.city THEN
+            INSERT INTO canvis_locations (location_id, city_old, city_new, changed_on)
+            VALUES (NEW.location_id, OLD.city, NEW.city, NOW());
+        end if;
+        RETURN NEW;
+    END;
+    $$;
+
+--trigger
+CREATE OR REPLACE TRIGGER trig_registrar_canvis_loc
+    BEFORE UPDATE
+    ON locations
+    FOR EACH ROW
+    EXECUTE FUNCTION func_registrar_canvis_loc();
+
+--funcio trigger2
+CREATE OR REPLACE FUNCTION func_registrar_canvis() RETURNS TRIGGER LANGUAGE plpgsql
+AS $$
+    BEGIN
+        INSERT INTO canvis(nom_trigger, tipus_trigger, nivell_trigger, ordre)
+        VALUES(TG_NAME, TG_OP, TG_LEVEL, '');
+        RETURN NEW;
+    END;
+    $$;
+
+--trigger2
+CREATE OR REPLACE TRIGGER trig_gravar_operacion
+    BEFORE UPDATE
+    ON locations
+    FOR EACH STATEMENT
+    EXECUTE FUNCTION func_registrar_canvis();
+
+/*
+Joc de proves
+*/
+UPDATE locations
+SET city = 'Barcelona', street_address = '113 Passeig de Gràcia'
+WHERE location_id = 1000;
+
+UPDATE locations
+SET street_address = '20 Carrer Valencia'
+WHERE location_id = 1000;
+
+SELECT * FROM canvis_locations;
+/*
+OUTPUT:
+id | location_id | city_old | city_new | changed_on
+1       1000        Roma      Barcelona 2026-05-11 10:23:10.591917
+*/
+
+SELECT * FROM canvis;
+/*
+OUTPUT:
+id  |   timestamp_                      |   nom_trigger         |   tipus_trigger   |   nivell_trigger
+2    2026-05-11 10:23:10.591917 +00:00   trig_gravar_operacion      UPDATE              STATEMENT
+3    2026-05-11 10:23:24.266084 +00:00   trig_gravar_operacion      UPDATE              STATEMENT
+*/
+
+/*
+EX3
+*/
+--Tipus de dada per guardar dades vitals d'un empleat
+CREATE TYPE dades_emp_type AS (
+    id real,
+    nom text,
+    cognom text
+);
+
+--Procediment que imprimeix les dades de l'empleat mes antic
+CREATE OR REPLACE PROCEDURE proc_mostrar_empt_dept (par_nom_dept departments.department_name%type) language plpgsql
+AS $$
+    DECLARE
+        var_dadesEmp dades_emp_type;
+    BEGIN
+        IF func_comprv_dept(par_nom_dept) THEN
+            var_dadesEmp := func_emp_mes_antic(par_nom_dept);
+            RAISE NOTICE 'L`empleat més antic del % té l`ID
+%i es diu %', par_nom_dept, var_dadesEmp.id, CONCAT(var_dadesEmp.nom, ' ', var_dadesEmp.cognom);
+        ELSE
+            RAISE EXCEPTION 'El departament amb nom: % no existeix', par_nom_dept;
+        end if;
+
+    END;
+    $$;
+
+
+--Funcio que comprova si el nom del departament existeix o no
+CREATE OR REPLACE FUNCTION func_comprv_dept(par_nomDept departments.department_name%type) RETURNS boolean language plpgsql
+AS $$
+    DECLARE
+        var_numsDept real;
+    BEGIN
+        SELECT COUNT(*) INTO var_numsDept FROM departments WHERE LOWER(department_name) = LOWER(par_nomDept);
+        IF var_numsDept > 0 THEN
+            RETURN TRUE;
+        ELSE
+            RETURN FALSE;
+        END IF;
+    END;
+    $$;
+
+--Funcio per retornar empleat mes antic
+
+CREATE OR REPLACE FUNCTION func_emp_mes_antic(par_nomDept departments.department_name%type) RETURNS dades_emp_type LANGUAGE plpgsql
+AS $$
+    DECLARE
+        var_dadesEmp dades_emp_type;
+    BEGIN
+       SELECT e.employee_id, e.first_name, e.last_name
+        INTO var_dadesEmp
+        FROM employees e
+        JOIN departments d ON d.department_id = e.department_id
+        WHERE LOWER(d.department_name) = LOWER(par_nomDept)
+        ORDER BY e.hire_date ASC
+        LIMIT 1;
+        RETURN var_dadesEmp;
+    END;
+    $$;
+
+/*
+Joc de proves
+*/
+call proc_mostrar_empt_dept('IT');
+--L`empleat més antic del IT té l`ID
+--103i es diu Alexander Hunold
+call proc_mostrar_empt_dept('Shipping');
+--L`empleat més antic del Shipping té l`ID
+--122i es diu Payam Kaufling
+call proc_mostrar_empt_dept('fakeDept');
+--[P0001] ERROR: El departament amb nom: fakeDept no existeix Where: PL/ pgSQL function proc_mostrar_empt_dept(character varying) line 10 at RAISE
